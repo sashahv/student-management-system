@@ -37,11 +37,8 @@ public class AttachmentController {
                              @RequestParam("semestr") int semester,
                              @RequestParam("plik") MultipartFile file,
                              RedirectAttributes redirectAttributes) throws Exception {
-        Attachment attachment = attachmentService.saveAttachment(studentId, semester, file);
+        attachmentService.saveAttachment(studentId, semester, file);
         redirectAttributes.addFlashAttribute("message", "Karta ocen pomyślnie dodana");
-//        String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/download?id=")
-//                .path(attachment.getId()).toUriString();
         return "redirect:/karty-ocen?studentId=" + studentId;
     }
 
