@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <title>Dodawanie stypendysty</title>
+</head>
+<script th:inline="javascript">
+</script>
+<body>
+<div class="top-menu">
+    <div class="wrapper">
+<!--        <div class="main-title">Dom Fundacji Jana Pawła II w Lublinie</div>-->
+        <ul class="nav">
+            <li class="nav-item">
+                <a th:href="@{/dodawanie-stypendysty}" class="active">Dodawanie</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/stypendysci}">Stypendyści</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/raport}">Raport</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/panel-administracyjny}">Administracja</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/archiwum}">Archiwum</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/logout}">Wyloguj się</a>
+            </li>
+        </ul>
+        <p th:if="${message}">
+            <span th:text="${message}" id="success-message" ></span>
+        </p>
+        <div class="page-top-panel">Dodawanie stypendysty</div>
+    </div>
+</div>
+
+<section class="data">
+    <div class="wrapper">
+        <form th:action="@{/dodawanie-stypendysty}" onsubmit="return validateForm()" th:object="${student}" method="POST">
+            <div class="personal-data">
+                <div class="data-block-title">Dane personalne</div>
+                <div class="personal-data-row">
+                    <div>
+                        <p th:if="${#fields.hasErrors('name')}" class="invalid-field-message">Pole jest wymagane</p>
+                        <input autocomplete="off" type="text" th:field="*{name}" class="data-block-item" placeholder="Imię">
+                    </div>
+
+                    <div>
+                        <p th:if="${#fields.hasErrors('surname')}" class="invalid-field-message">Pole jest wymagane</p>
+                        <input autocomplete="off" type="text" th:field="*{surname}" class="data-block-item" placeholder="Nazwisko">
+                    </div>
+
+                    <input autocomplete="off" type="text" th:field="*{fatherName}" class="data-block-item" placeholder="Imię ojca">
+
+                    <div>
+                        <p th:if="${#fields.hasErrors('passportNumber')}" class="invalid-field-message">Pole jest wymagane</p>
+                        <input autocomplete="off" type="text" th:field="*{passportNumber}" class="data-block-item" placeholder="Numer paszportu">
+                    </div>
+
+                    <div>
+                        <p th:if="${#fields.hasErrors('phoneNumber')}" class="invalid-field-message">Nieprawidłowy format</p>
+                        <input autocomplete="off" type="text" th:field="*{phoneNumber}" class="data-block-item" placeholder="Numer telefonu">
+                    </div>
+                </div>
+                <div class="personal-data-row">
+                    <div>
+                        <p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" class="invalid-field-message"></p>
+                        <input autocomplete="off"  type="text" onfocusin="(this.type='date')" onfocusout="(this.type='text')" th:field="*{birthDate}" class="data-block-item data-dropdown" placeholder="Data urodzenia"/>
+                    </div>
+                    <div>
+                        <p th:if="${#fields.hasErrors('gender')}" class="invalid-field-message">Pole jest wymagane</p>
+                        <select th:field="*{gender}" class="data-block-item data-dropdown">
+                            <option th:value="-1" selected hidden>Płeć</option>
+                            <option th:each="gender : ${genders}"
+                                    th:text="${gender.name}"
+                                    th:value="${gender.name()}">
+                            </option>
+                        </select>
+                    </div>
+                    <div>
+                        <p th:if="${#fields.hasErrors('countryOfBirth')}" class="invalid-field-message">Pole jest wymagane</p>
+                        <select th:field="*{countryOfBirth}" class="data-block-item data-dropdown">
+                            <option th:value="-1" selected hidden>Kraj</option>
+                            <option th:each="country: ${countries}"
+                                    th:text="${country.name}"
+                                    th:value="${country.id}">
+                            </option>
+                        </select>
+                    </div>
+                    <input autocomplete="off" type="text" th:field="*{placeOfBirth}" class="data-block-item"
+                           placeholder="Miejsce urodzenia">
+                    <input autocomplete="off" type="text" th:field="*{citizenship}" class="data-block-item" placeholder="Obywatelstwo">
+                    <input autocomplete="off" type="text" th:field="*{nationality}" class="data-block-item" placeholder="Narodowość">
+                </div>
+            </div>
+            <div class="other-information">
+                <div class="data-block" id="permanent-address" th:object="${student.permanentAddress}">
+                    <div class="data-block-title">Adres stały</div>
+                    <div class="data-block-content">
+                                <div>
+                                    <select th:field="*{country}" class="data-block-item data-dropdown">
+                                        <option th:value="-1" selected hidden>Kraj</option>
+                                        <option th:each="country: ${countries}"
+                                                th:text="${country.name}"
+                                                th:value="${country.id}">
+                                        </option>
+                                    </select>
+                                </div>
+                            <input autocomplete="off" type="text" th:field="*{city}" class="data-block-item" placeholder="Miasto">
+                            <input autocomplete="off" type="text" th:field="*{street}" class="data-block-item" placeholder="Ulica">
+                            <input autocomplete="off" type="text" th:field="*{houseNumber}" class="data-block-item"
+                                   placeholder="Nr domu">
+                            <div>
+                                <p th:if="${#fields.hasErrors('zipCode')}" class="invalid-field-message">Nieprawidłowy format</p>
+                                <input autocomplete="off" id="zip" type="text" th:field="*{zipCode}" class="data-block-item"
+                                       placeholder="Kod pocztowy">
+                            </div>
+                    </div>
+                </div>
+                <div class="data-block" id="study" th:object="${student.study}">
+                    <div class="data-block-title">Przebieg studiów</div>
+                    <div class="data-block-content">
+                            <div>
+                                <p th:if="${#fields.hasErrors('faculty')}" class="invalid-field-message">Pole jest wymagane</p>
+                                <select id="faculty" th:field="*{faculty}" class="data-block-item data-dropdown">
+                                    <option th:value="-1" selected hidden>Wydział</option>
+                                    <option th:each="faculty: ${faculties}"
+                                            th:text="${faculty.name}"
+                                            th:value="${faculty.id}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                <p th:if="${#fields.hasErrors('fieldOfStudy')}" class="invalid-field-message">Pole jest wymagane</p>
+                                <select id="field_of_study" th:field="*{fieldOfStudy}" class="data-block-item data-dropdown">
+                                    <option th:value="-1" selected hidden>Kierunek</option>
+                                    <option th:each="field: ${fields}"
+                                            th:text="${field.name}"
+                                            th:value="${field.id}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                <p th:if="${#fields.hasErrors('kindOfStudy')}" class="invalid-field-message">Pole jest wymagane</p>
+                                <select th:field="*{kindOfStudy}" class="data-block-item data-dropdown last-column">
+                                    <option th:value="-1" selected hidden>Rodzaj studiów</option>
+                                    <option th:each="kind: ${kinds}"
+                                            th:text="${kind.name}"
+                                            th:value="${kind.id}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                <p th:if="${#fields.hasErrors('typeOfStudy')}" class="invalid-field-message">Pole jest wymagane</p>
+                                <select th:field="*{typeOfStudy}" class="data-block-item data-dropdown">
+                                    <option th:value="-1" selected hidden>Typ studiów</option>
+                                    <option th:each="type: ${types}"
+                                            th:text="${type.name}"
+                                            th:value="${type.id}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <p th:if="${#fields.hasErrors('yearOfStudy')}" th:errors="*{yearOfStudy}" class="invalid-field-message">Pole jest wymagane</p>
+                                <input autocomplete="off" type="text" th:field="*{yearOfStudy}" class="data-block-item" placeholder="Rok studiów">
+                            </div>
+                            <div>
+                                <p th:if="${#fields.hasErrors('actualSemester')}" th:errors="*{actualSemester}" class="invalid-field-message">Pole jest wymagane</p>
+                                <input autocomplete="off" type="text" th:field="*{actualSemester}" class="data-block-item" placeholder="Semester studiów">
+                            </div>
+                            <div th:object="${student.scholarship}">
+                                <p th:if="${#fields.hasErrors('dateOfGetting')}" th:errors="*{dateOfGetting}" class="invalid-field-message"></p>
+                                <input autocomplete="off" type="text" onfocusin="(this.type='date')" lang="pl" onfocusout="(this.type='text')" th:field="${student.scholarship.dateOfGetting}" class="data-block-item data-dropdown" placeholder="Data rozpoczęcia" />
+                            </div>
+                            <div th:object="${student.scholarship}">
+                                <p  th:if="${#fields.hasErrors('dateOfTermination')}" th:errors="*{dateOfTermination}" class="invalid-field-message"></p>
+                                <input autocomplete="off" type="text" onfocusin="(this.type='date')" lang="pl" onfocusout="(this.type='text')" th:field="${student.scholarship.dateOfTermination}" class="data-block-item data-dropdown" placeholder="Data zakończenia"/>
+                            </div>
+                            <input autocomplete="off" type="hidden" th:field="${student.scholarship.actualAmount}" th:value="${student.scholarship.actualAmount}">
+                    </div>
+                </div>
+                <div class="data-block" id="current-address" th:object="${student.currentAddress}">
+                    <div class="data-block-title">Adres zamieszkania</div>
+                    <div class="data-block-content">
+                            <select th:field="*{country}" class="data-block-item data-dropdown">
+                                <option th:value="-1" selected hidden>Kraj</option>
+                                <option th:each="country: ${countries}"
+                                        th:text="${country.name}"
+                                        th:value="${country.id}">
+                                </option>
+                            </select>
+                            <input autocomplete="off" type="text" th:field="*{city}" class="data-block-item" placeholder="Miasto">
+                            <input autocomplete="off" type="text" th:field="*{street}" class="data-block-item long" placeholder="Ulica">
+                            <input autocomplete="off" type="text" th:field="*{houseNumber}" class="data-block-item"
+                                   placeholder="Nr domu">
+                            <div>
+                                <p th:if="${#fields.hasErrors('zipCode')}" class="invalid-field-message">Nieprawidłowy format</p>
+                                <input autocomplete="off" type="text" th:field="*{zipCode}" id="zipCode" class="data-block-item"
+                                       placeholder="Kod pocztowy">
+                            </div>
+                        <div>
+                            <p th:if="${#fields.hasErrors('placeOfLiving')}" class="invalid-field-message">Pole jest wymagane</p>
+                            <select th:field="*{placeOfLiving}" class="data-block-item data-dropdown last-column" style="font-size: 13px">
+                                    <option th:value="-1" selected hidden>Miejsce zamieszkania</option>
+                                    <option th:each="placeOfLiving: ${placesOfLiving}"
+                                            th:text="${placeOfLiving.name} + (${placeOfLiving.roomSize} != 0 ? (' - ' + ${placeOfLiving.roomSize} + ' os') : '')"
+                                            th:value="${placeOfLiving.id}">
+                                    </option>
+                                </select>
+                            </div>
+                    </div>
+                </div>
+                    <textarea th:field="${student.additionalInformation}"
+                              placeholder="Informacje dodatkowe" class="add-info"></textarea>
+            </div>
+            <div class="data-buttons">
+                <a href="#" class="clear-button" id="clear-button">Wyczyść</a>
+                <button type="submit">Dodaj</button>
+            </div>
+        </form>
+    </div>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script type="text/javascript" th:src="@{/js/script.js}"></script>
+<script th:inline="javascript">
+    let dropdowns = document.getElementsByClassName("data-dropdown");
+
+    document.getElementById('clear-button').addEventListener('click', function () {
+        const fields = document.querySelectorAll('form input');
+        fields.forEach(field => field.value = '');
+        const selectFields = document.querySelectorAll('form select');
+        selectFields.forEach(selectField => selectField.selectedIndex = 0);
+        for (let i = 0; i < dropdowns.length; i++) {
+                    dropdowns[i].style.color="#868686";
+                    dropdowns[i].style.fontWeight="400"
+                    dropdowns[i].style.backgroundColor="#ffffff"
+    }});
+
+    for (let i = 0; i < dropdowns.length; i++) {
+        dropdowns[i].addEventListener("change", function () {
+            if (this.value) {
+                this.style.color="#000000";
+                this.style.fontWeight="700"
+                this.style.backgroundColor="#b2b2b2"
+            } else {
+                this.style.color="#868686";
+                this.style.fontWeight="400"
+                this.style.backgroundColor="#ffffff"
+            }
+        });
+
+        let inputs = document.getElementsByClassName("data-block-item");
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].addEventListener("change", function () {
+                if (this.value) {
+                    this.style.color="#000000";
+                    this.style.fontWeight="700"
+                    this.style.backgroundColor="#b2b2b2"
+                } else {
+                    this.style.color="#868686";
+                    this.style.fontWeight="400"
+                    this.style.backgroundColor="#ffffff"
+                }
+            });
+        }
+    }
+
+    let successMessage = document.getElementById("success-message");
+    if(successMessage.innerText!==""){
+        setTimeout(function() {
+            successMessage.style.width="0";
+            successMessage.style.padding="0";
+            successMessage.innerText="";
+            successMessage.style.transition=".3s linear";
+        }, 3000);
+    }
+</script>
+</body>
+</html>

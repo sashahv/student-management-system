@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Stypendyści</title>
+</head>
+<script th:inline="javascript">
+</script>
+<body>
+<div class="top-menu">
+    <div class="wrapper">
+        <ul class="nav">
+            <li class="nav-item">
+                <a th:href="@{/dodawanie-stypendysty}">Dodawanie</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/stypendysci}" class="active">Stypendyści</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/raport}">Raport</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/panel-administracyjny}">Administracja</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/archiwum}">Archiwum</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/logout}">Wyloguj się</a>
+            </li>
+        </ul>
+        <p th:if="${message}">
+            <span th:text="${message}" id="success-message"></span>
+        </p>
+        <div class="page-top-panel">
+            <span th:text="${student.name} + ' ' + ${student.surname}"></span>
+        </div>
+    </div>
+</div>
+<div class="student-control-block">
+    <div id="change-semester-input-avg-grade">
+        <form th:action="@{/stypendysta/zwieksz-semestr(studentId=${student.id})}" onsubmit="" th:method="post">
+            <div class="change-semester-input-avg-grade-content">
+                <div class="change-semester-input-avg-grade-title">
+                    Wprowadź średnią ocenę
+                </div>
+                <div><input type="text" th:name="ocena"></div>
+
+                <button type="submit">Przenieść</button>
+            </div>
+        </form>
+        <div class="change-semester-input-avg-grade-block">
+        </div>
+    </div>
+    <div>
+        <div class="student-control-block-content">
+            <a class="student-controls" th:href="@{/stypendysci/zaswiadczenie(studentId=${student.id})}">Zaświadczenie</a>
+            <a class="student-controls" th:href="@{/karty-ocen(studentId=${student.id})}">Karty ocen</a>
+            <a class="student-controls" th:href="@{/stypendysci/edytowanie(studentId=${student.id})}">Edytuj</a>
+            <a class="student-controls" th:href="@{/stypendysci/archiwizacja(studentId=${student.id})}">Archiwizuj</a>
+            <a class="student-controls" id="student-controls-change-semestr">Zwiększ semestr</a>
+        </div>
+    </div>
+
+</div>
+<section class="info">
+    <div class="wrapper">
+        <div class="info-content">
+            <div class="info-column">
+                <div class="info-block personal-data">
+                    <div class="info-block-title">Dane personalne</div>
+                    <div class="info-block-content" th:object="${student}">
+                        <p class="info-block-item">Imie: <span class="info-block-item-value" th:text="*{name}"></span>
+                        </p>
+                        <p class="info-block-item">Nazwisko: <span class="info-block-item-value"
+                                                                   th:text="*{surname}"></span></p>
+                        <p class="info-block-item">Imię ojca: <span class="info-block-item-value"
+                                                                    th:text="*{fatherName}"></span></p>
+                        <p class="info-block-item">Numer paszportu: <span class="info-block-item-value"
+                                                                          th:text="*{passportNumber}"></span></p>
+                        <p class="info-block-item">Numer telefonu: <span class="info-block-item-value"
+                                                                         th:text="*{phoneNumber}"></span></p>
+                        <p class="info-block-item">Data urodzenia: <span class="info-block-item-value"
+                                                                         th:text="*{#temporals.format(birthDate, 'dd MMMM yyyy', new java.util.Locale('pl', 'PL'))}"></span>
+                        </p>
+                        <p class="info-block-item">Płeć: <span class="info-block-item-value" th:text="*{gender}"></span>
+                        </p>
+                        <p class="info-block-item">Kraj urodzenia: <span class="info-block-item-value"
+                                                                         th:text="*{countryOfBirth?.name}"></span></p>
+                        <p class="info-block-item">Miejsce urodzenia: <span class="info-block-item-value"
+                                                                            th:text="*{placeOfBirth}"></span></p>
+                        <p class="info-block-item">Obywatelstwo: <span class="info-block-item-value"
+                                                                       th:text="*{citizenship}"></span></p>
+                        <p class="info-block-item">Narodowość: <span class="info-block-item-value"
+                                                                     th:text="*{nationality}"></span></p>
+                        <p class="info-block-item additional-info">Informacje dodatkowe: <span class="info-block-item-value"
+                                                                               th:text="*{additionalInformation}"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="info-column">
+                <div class="info-address">
+                    <div class="info-block">
+                        <div class="info-block-title">Adres stały</div>
+                        <div class="info-block-content" th:object="${student.permanentAddress}">
+                            <p class="info-block-item">Kraj: <span class="info-block-item-value"
+                                                                   th:text="*{country?.name}"></span></p>
+                            <!--                            <p class="info-block-item">Województwo: <span class="info-block-item-value"-->
+                            <!--                                                                          th:text="*{province}"></span></p>-->
+                            <p class="info-block-item">Miasto: <span class="info-block-item-value"
+                                                                     th:text="*{city}"></span></p>
+                            <p class="info-block-item">Ulica: <span class="info-block-item-value"
+                                                                    th:text="*{street} + ' ' + *{houseNumber}"></span></p>
+                            <p class="info-block-item">Kod pocztowy: <span class="info-block-item-value"
+                                                                           th:text="*{zipCode}"></span></p>
+                            </div>
+                    </div>
+                    <div class="info-block">
+                        <div class="info-block-title">Adres zamieszkania</div>
+                        <div class="info-block-content" th:object="${student.currentAddress}">
+                            <p class="info-block-item">Kraj: <span class="info-block-item-value"
+                                                                   th:text="*{country?.name}"></span></p>
+                            <!--                            <p class="info-block-item">Województwo: <span class="info-block-item-value"-->
+                            <!--                                                                          th:text="*{province}"></span></p>-->
+                            <p class="info-block-item">Miasto: <span class="info-block-item-value"
+                                                                     th:text="*{city}"></span></p>
+                            <p class="info-block-item">Ulica: <span class="info-block-item-value"
+                                                                    th:text="*{street} + ' ' + *{houseNumber}"></span></p>
+                            <p class="info-block-item">Kod pocztowy: <span class="info-block-item-value"
+                                                                           th:text="*{zipCode}"></span></p>
+                            <p class="info-block-item">Miejsce zamieszkania: <span class="info-block-item-value" th:if="*{placeOfLiving!=null}"
+                                                                                   th:text="*{placeOfLiving?.name} + (*{placeOfLiving?.roomSize} != 0 ? (' / ' + *{placeOfLiving?.roomSize} + ' os') : '')"></span>
+                            </p>
+                            <p class="info-block-item">Rok rozpoczęczia: <span class="info-block-item-value"
+                                                                               th:text="*{startYear}"></span></p>
+                            <p class="info-block-item">Rok zakończenia: <span class="info-block-item-value"
+                                                                              th:text="*{finishYear}"></span></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="info-column">
+                    <div class="info-block">
+                        <div class="info-block-title">Stypendium</div>
+                        <div class="info-block-content" th:object="${student.scholarship}">
+                            <p class="info-block-item">Data wydania: <span class="info-block-item-value"
+                                                                           th:text="*{#temporals.format(dateOfGetting, 'dd MMMM yyyy', new java.util.Locale('pl', 'PL'))}"></span>
+                            </p>
+                            <p class="info-block-item">Data ustania: <span class="info-block-item-value"
+                                                                           th:text="*{#temporals.format(dateOfTermination, 'dd MMMM yyyy', new java.util.Locale('pl', 'PL'))}"></span>
+                            </p>
+                            <p class="info-block-item">Wysokość: <span class="info-block-item-value"
+                                                                       th:text="*{actualAmount} + ' zł'"></span></p>
+                            <p class="info-block-item">Odliczenia: <span class="info-block-item-value"
+                                                                         th:text="*{decreasingAmount} + ' zł' +
+                                                                                        (*{customDecreasingAmount}!=0 ? ' + ' + *{customDecreasingAmount} +
+                                                                                        ' zł = ' + (*{decreasingAmount}+*{customDecreasingAmount}) + ' zł' : '' )">
+                            </span>
+                            <p class="info-block-item">Kwota do wypłaty: <span class="info-block-item-value"
+                                                                               th:text="*{totalAmount} + ' zł'"></span></p>
+                        </div>
+                    </div>
+                    <div class="info-block">
+                        <div class="info-block-title">Przebieg studiów</div>
+                        <div class="info-block-content" th:object="${student.study}">
+                            <p class="info-block-item">Rok studiów: <span class="info-block-item-value"
+                                                                          th:text="*{yearOfStudy}"></span></p>
+                            <p class="info-block-item">Semester studiów: <span class="info-block-item-value"
+                                                                               th:text="*{actualSemester}"></span></p>
+                            <p class="info-block-item">Wydział: <span class="info-block-item-value"
+                                                                      th:text="*{faculty?.name}"></span></p>
+                            <p class="info-block-item">Kierunek: <span class="info-block-item-value"
+                                                                       th:text="*{fieldOfStudy?.name}"></span></p>
+                            <p class="info-block-item">Rodzaj studiów: <span class="info-block-item-value"
+                                                                             th:text="*{kindOfStudy?.name}"></span></p>
+                            <p class="info-block-item">Typ studiów: <span class="info-block-item-value"
+                                                                          th:text="*{typeOfStudy?.name}"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="info-block-content-wide" id="study-history" th:if="${countAvgGrades>0}">
+            <div class="grades-table-title">Historia studiów</div>
+            <div class="grades-tables-item grades-block">
+                <div class="grades-table-subtitle">Semestralne oceny</div>
+                <table class="table table-dark table-bordered table-hover grades-table" th:if="${countAvgGrades>0}">
+                    <thead>
+                    <tr>
+                        <th class="col-3">Wydział</th>
+                        <th class="col-3">Kierunek</th>
+                        <th class="col-2">Rodzaj studiów</th>
+                        <th class="col-2">Typ studiów</th>
+                        <th class="col-1">Semester</th>
+                        <th class="col-1">Ocena</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="grade : ${averageGrades}">
+                        <td th:text="${grade.faculty}" class="col-3"></td>
+                        <td th:text="${grade.fieldOfStudy}" class="col-3"></td>
+                        <td th:text="${grade.kindOfStudy}" class="col-2"></td>
+                        <td th:text="${grade.typeOfStudy}" class="col-2"></td>
+                        <td th:text="${grade.semester}" class="col-1"></td>
+                        <td th:text="${grade.averageGrade}" class="col-1"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grades-tables-item grades-block" th:if="${countAvgGradesByYear>0}">
+                <div class="grades-table-subtitle">Roczne oceny</div>
+                <table class="table table-dark table-bordered table-hover grades-table">
+                        <thead>
+                        <tr>
+                            <th class="col-3">Wydział</th>
+                            <th class="col-3">Kierunek</th>
+                            <th class="col-2">Rodzaj studiów</th>
+                            <th class="col-2">Typ studiów</th>
+                            <th class="col-1">Rok</th>
+                            <th class="col-1">Ocena</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="grade : ${averageGradesByYear}">
+                            <td th:text="${grade.faculty}" class=" col-3"></td>
+                            <td th:text="${grade.fieldOfStudy}" class="col-3"></td>
+                            <td th:text="${grade.kindOfStudy}" class="col-2"></td>
+                            <td th:text="${grade.typeOfStudy}" class="col-2"></td>
+                            <td th:text="${grade.academicYear}" class="col-1"></td>
+                            <td th:text="${grade.averageGrade}" class="col-1"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script th:inline="javascript">
+    let successMessage = document.getElementById("success-message");
+    if(successMessage.innerText!==""){
+        setTimeout(function() {
+            successMessage.style.width="0";
+            successMessage.style.padding="0";
+            successMessage.innerText="";
+            successMessage.style.transition=".3s linear";
+        }, 3000);
+    }
+
+    let avgGradeSetBlock = document.getElementById("change-semester-input-avg-grade");
+    document.getElementById("student-controls-change-semestr").addEventListener('click', function (event){
+        event.preventDefault();
+        avgGradeSetBlock.style.display="flex";
+    });
+
+    function validateForm() {
+        let gradeFields = document.getElementsByClassName("change-semester-input");
+        for (let i = 0; i < gradeFields.length; i++) {
+            if (!gradeFields[i].value || gradeFields[i].value.trim() === "" || gradeFields[i].value < 1 || gradeFields[i].value > 5) {
+                gradeFields[i].style.border = "4px solid red";
+                gradeFields[i].scrollIntoView({behavior: "smooth", block: "center"});
+                confirmBlock.style.display = "none";
+                return false
+            }
+        }
+
+        gradeFields.style.border = "none";
+        return true;
+    }
+
+    function closeErrorMessage() {
+        let gradeFields = document.getElementsByClassName("change-semester-input");
+        for (let i = 0; i < gradeFields.length; i++) {
+            gradeFields[i].style.border = "none"
+        }
+    }
+</script>
+</body>
+</html>

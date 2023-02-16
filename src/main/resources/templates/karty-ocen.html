@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Stypendyści</title>
+</head>
+<script th:inline="javascript">
+</script>
+<body>
+<div class="top-menu">
+    <div class="wrapper">
+        <ul class="nav">
+            <li class="nav-item">
+                <a th:href="@{/dodawanie-stypendysty}">Dodawanie</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/stypendysci}" class="active">Stypendyści</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/raport}">Raport</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/panel-administracyjny}">Administracja</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/archiwum}">Archiwum</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/logout}">Wyloguj się</a>
+            </li>
+        </ul>
+        <p th:if="${message}">
+            <span th:text="${message}" id="success-message"></span>
+        </p>
+        <div class="page-top-panel">
+            <span th:text="${student.name} + ' ' + ${student.surname}"></span>
+        </div>
+    </div>
+</div>
+<div id="files-block">
+    <div class="wrapper">
+        <div class="files-block-content">
+            <div class="file-send-field">
+                <form th:action="@{/karty-ocen/przeslanie}" onsubmit="return validateSemester()"
+                      enctype="multipart/form-data" th:method="POST">
+                    <p id="invalid-semester-message"></p>
+                    <p class="file-send-field-title">Dodawanie karty ocen</p>
+                    <div>
+                        <input onfocus="closeErrorMessage()" type="file" name="plik" id="file">
+                        <label>Semestr:<input type="text" onfocus="closeErrorMessage()" name="semestr"
+                                              th:value="${student.study.actualSemester}" id="semester-field"></label>
+                    </div>
+                    <input type="hidden" name="studentId" th:value="${student.id}">
+                        <button type="submit">Dodaj</button>
+                </form>
+            </div>
+            <table class="table table-dark table-bordered table-hover grades-table files-table">
+                <thead>
+                <tr>
+                    <th class="col-3">Semestr</th>
+                    <th class="col-6">Nazwa pliku</th>
+                    <th class="col-3">Działania</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="attachment, stat : ${attachments}">
+                    <td th:text="__${stat.index+1}__"></td>
+                    <td>
+                        <a th:text="${attachment.fileName}" class="watch-file" th:href="@{/karty-ocen/karta(id=${attachment.id})}"></a>
+                    </td>
+                    <td>
+                        <div class="actions-buttons">
+                            <a th:href="@{/karty-ocen/pobieranie(id=${attachment.id})}" class="action-button">
+                                <img th:src="@{/images/download.svg}" alt="" class="action-button-icon">
+                                <span id="download-tip" class="tip-text">Pobierz</span>
+                            </a>
+                            <a th:href="@{/karty-ocen/usuwanie(id=${attachment.id})}" class="action-button">
+                                <img th:src="@{/images/delete.png}" alt="" class="action-button-icon">
+                                <span id="delete-tip" class="tip-text">Usuń</span>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script th:inline="javascript">
+    let successMessage = document.getElementById("success-message");
+    if (successMessage.innerText !== "") {
+        setTimeout(function () {
+            successMessage.style.width = "0";
+            successMessage.style.padding = "0";
+            successMessage.innerText = "";
+            successMessage.style.transition = ".3s linear";
+        }, 3000);
+    }
+
+    function validateSemester() {
+        let semesterField = document.getElementById("semester-field");
+        let fileField = document.getElementById("file");
+        let errorMessage = document.getElementById("invalid-semester-message");
+        if (!semesterField.value || semesterField.value < 0 || isNaN(semesterField.value) || semesterField.value.trim() === "") {
+            errorMessage.innerHTML = "Podaj prawidłowy semestr"
+            errorMessage.style.display = "flex";
+            return false
+        } else if (!fileField.value.endsWith(".pdf")) {
+            errorMessage.innerHTML = "Wybierz plik w formacie .pdf"
+            errorMessage.style.display = "flex";
+            return false;
+        } else if (fileField.size > 1024 * 1024) {
+            errorMessage.innerHTML = "Plik jest za duży"
+            errorMessage.style.display = "flex";
+            return false;
+        } else {
+            errorMessage.style.display = "none";
+            return true;
+        }
+    }
+
+    function closeErrorMessage() {
+        let errorMessage = document.getElementById("error-scholarship");
+        errorMessage.style.display = "none";
+    }
+</script>
+</body>
+</html>

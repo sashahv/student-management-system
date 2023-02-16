@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Login - DFJP Database</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="all">
+        <div class="container-fluid text-center">
+            <p class="title">Dom Fundacji Jana Pawła II<br/>w Lublinie</p>
+            <form th:action="@{/login}" method="post" class="login-form">
+                <div class="error-text">
+                    <p th:if="${param.error}">Błędna nazwa użytkownika lub hasło</p>
+                </div>
+                <div class="form-content">
+                <p class="login-title">Logowanie</p>
+                    <div class="input-form">
+                        <img th:src="@{/images/user.svg}">
+                        <input id="field1" type="text" autocomplete="off" name="username" class="form-control data-input" placeholder="Nazwa użytkownika" required>
+                    </div>
+                    <div class="input-form">
+                        <img th:src="@{/images/lock.svg}">
+                        <input id="field2" type="password" autocomplete="off" name="password" class="form-control data-input" placeholder="Hasło" required>
+                    </div>
+                    <div>
+                        <input type="submit" value="Załoguj się" class="btn login-button">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

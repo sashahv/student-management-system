@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Stypendyści</title>
+</head>
+<script th:inline="javascript">
+</script>
+<body>
+<div class="top-menu">
+    <div class="wrapper">
+        <ul class="nav">
+            <li class="nav-item">
+                <a th:href="@{/dodawanie-stypendysty}">Dodawanie</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/stypendysci}">Stypendyści</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/raport}">Raport</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/panel-administracyjny}" class="active">Administracja</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/archiwum}">Archiwum</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/logout}">Wyloguj się</a>
+            </li>
+        </ul>
+        <p th:if="${message}">
+            <span th:text="${message}" id="success-message"></span>
+        </p>
+        <div class="page-top-panel">
+            <span>Zarządzanie typami studiów</span>
+        </div>
+    </div>
+</div>
+<section class="fields-control types">
+    <div class="wrapper">
+        <form th:action="@{/panel-administracyjny/typy-studiow/dodawanie}" onsubmit="return validateForm()" th:method="post">
+            <div class="add-field">
+                <div class="add-field-content">
+                    <p id="invalid-name-message">Pole jest wymagane</p>
+                    <p>Dodanie nowego typu studiów do listy</p>
+                    <div>
+                        <input type="text" autocomplete="off" id="name" th:name="nazwa" onfocus="closeErrorMessage()" placeholder="Nazwa typu studiów">
+                    </div>
+                    <div class="">
+                        <button type="submit">Dodaj</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <table class="table table-bordered table-dark table-hover" id="control-table">
+            <thead id="students-thead">
+            <tr>
+                <th class="col-10 text-left">Nazwa</th>
+                <th class="col-2 text-right">Działania</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="type: ${types}">
+                <td class="col-10 text-left" th:text="${type.name}"></td>
+                <td class="col-2 text-right">
+                    <div class="actions-buttons">
+                        <a th:href="@{/panel-administracyjny/typy-studiow/usuwanie(id=${type.id})}" class="action-button">
+                            <img th:src="@{/images/delete.png}" style="margin-top: -3px;" alt="hover" class="action-button-icon">
+                            <span id="delete-tip" class="tip-text">Usuń</span>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script th:inline="javascript">
+    let successMessage = document.getElementById("success-message");
+    if(successMessage.innerText!==""){
+        setTimeout(function() {
+            successMessage.style.width="0";
+            successMessage.style.padding="0";
+            successMessage.innerText="";
+            successMessage.style.transition=".3s linear";
+        }, 3000);
+    }
+
+    function validateForm() {
+        let name = document.getElementById("name");
+        let errorMessage = document.getElementById("invalid-name-message");
+
+        if (!name.value || name.value.trim() === "") {
+            errorMessage.style.display = "flex";
+            return false
+        }
+
+        errorMessage.style.display = "none";
+        return true;
+    }
+
+    function closeErrorMessage(){
+        let errorMessage = document.getElementById("invalid-name-message");
+        errorMessage.style.display = "none";
+    }
+</script>
+</body>
+</html>

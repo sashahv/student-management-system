@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Stypendyści</title>
+</head>
+<script th:inline="javascript">
+</script>
+<body>
+
+<div class="top-menu">
+    <div class="wrapper">
+        <ul class="nav">
+            <li class="nav-item">
+                <a th:href="@{/dodawanie-stypendysty}">Dodawanie</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/stypendysci}" class="active">Stypendyści</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/raport}">Raport</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/panel-administracyjny}">Administracja</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/archiwum}">Archiwum</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/logout}">Wyloguj się</a>
+            </li>
+        </ul>
+        <div class="page-top-panel">
+            <span th:text="${student.name} + ' ' + ${student.surname}"></span>
+        </div>
+    </div>
+</div>
+<section class="info edit">
+<form th:action="@{/stypendysci/edytowanie(id=${student.id})}" th:object="${student}" method="POST">
+<div class="student-control-block">
+    <div class="wrapper">
+        <div class="student-control-block-content">
+            <button class="student-controls" id="student-controls-confirm" type="submit"><b>Zatwierdź</b></button>
+            <a class="student-controls" th:href="@{/stypendysci/stypendysta(id=${student.id})}">Anuluj</a>
+        </div>
+    </div>
+</div>
+    <div class="wrapper">
+            <div class="info-content">
+                <div class="info-column">
+                    <div class="info-block">
+                        <div class="info-block-title">Dane personalne</div>
+                        <div class="info-block-content" th:object="${student}">
+                            <p class="info-block-item editing-mode-block-item">Imie: <input autocomplete="off" required class="info-block-item-value" th:field="*{name}" th:value="*{name}" th:placeholder="*{name!=null && !name.equals('') } ? '[!]' + *{name} + '[!]' : '' "></p>
+                            <p class="info-block-item editing-mode-block-item">Nazwisko: <input autocomplete="off" required class="info-block-item-value" th:field="*{surname}" th:value="*{surname}" th:placeholder="*{surname!=null && !surname.equals('') } ? '[!]' + *{surname} + '[!]' : '' "></p>
+                            <p class="info-block-item editing-mode-block-item">Imię ojca: <input autocomplete="off" class="info-block-item-value" th:field="*{fatherName}" th:value="*{fatherName}" th:placeholder="*{fatherName!=null && !fatherName.equals('') } ? '[!]' + *{fatherName} + '[!]' : '' "></p>
+                            <p class="info-block-item editing-mode-block-item">Numer paszportu: <input autocomplete="off" required class="info-block-item-value" th:field="*{passportNumber}" th:value="*{passportNumber}" th:placeholder="*{passportNumber!=null && !passportNumber.equals('') } ? '[!]' + *{passportNumber} + '[!]' : '' "></p>
+                            <p class="info-block-item editing-mode-block-item">Numer telefonu: <input autocomplete="off" required class="info-block-item-value" th:field="*{phoneNumber}" th:value="*{phoneNumber}" th:placeholder="*{phoneNumber!=null && !phoneNumber.equals('') } ? '[!]' + *{phoneNumber} + '[!]' : '' "></p>
+                            <p class="info-block-item editing-mode-block-item">Data urodzenia: <input autocomplete="off" required type="text" onfocusin="(this.type='date')" onfocusout="(this.type='text')" th:field="*{birthDate}" th:value="*{birthDate}" th:placeholder="*{birthDate!=null && !birthDate.equals('') } ? '[!]' + *{birthDate} + '[!]' : '' " class="info-block-item-value calendar"></p>
+                            <p class="info-block-item editing-mode-block-item">Płeć:
+                                <select id="select" required th:field="*{gender}" class="info-block-item-value">
+                                    <option value="0" selected hidden>Płeć</option>
+                                    <option th:each="gender : ${genders}"
+                                            th:text="${gender.name}"
+                                            th:value="${gender.name()}">
+                                    </option>
+                                </select></p>
+                            <p class="info-block-item editing-mode-block-item">Kraj urodzenia:
+                                <select required th:field="*{countryOfBirth}" class="info-block-item-value">
+                                    <option value="0" selected hidden>Kraj urodzenia</option>
+                                    <option th:each="country: ${countries}"
+                                            th:text="${country.name}"
+                                            th:value="${country.id}">
+                                    </option>
+                                </select></p>
+                            <p class="info-block-item editing-mode-block-item">Miejsce urodzenia: <input autocomplete="off" class="info-block-item-value" th:field="*{placeOfBirth}" th:value="*{placeOfBirth}" th:placeholder="*{placeOfBirth!=null && !placeOfBirth.equals('') } ? '[!]' + *{placeOfBirth} + '[!]' : '' "></p>
+                            <p class="info-block-item editing-mode-block-item">Obywatelstwo: <input autocomplete="off" class="info-block-item-value" th:field="*{citizenship}" th:value="*{citizenship}" th:placeholder="*{citizenship!=null && !citizenship.equals('') } ? '[!]' + *{citizenship} + '[!]' : '' "></p>
+                            <p class="info-block-item editing-mode-block-item">Narodowość: <input autocomplete="off" class="info-block-item-value" th:field="*{nationality}" th:value="*{nationality}" th:placeholder="*{nationality!=null && !nationality.equals('') } ? '[!]' + *{nationality} + '[!]' : '' "></p>
+                            <p class="info-block-item editing-mode-block-item">Informacje dodatkowe: <input autocomplete="off" class="info-block-item-value" th:field="*{additionalInformation}" th:value="*{additionalInformation}" th:placeholder="*{additionalInformation!=null && !additionalInformation.equals('') } ? '[!]' + *{additionalInformation} + '[!]' : '' "></p>
+                        </div>
+                    </div>
+                    <div class="info-scholarship">
+
+                    </div>
+                </div>
+                <div class="info-column">
+                    <div class="info-address">
+                        <div class="info-block">
+                            <div class="info-block-title">Adres stały</div>
+                            <div class="info-block-content" th:object="${student.permanentAddress}">
+                                <p class="info-block-item editing-mode-block-item">Kraj:
+                                    <select required th:field="*{country}" class="info-block-item-value">
+                                        <option value="0" selected hidden>Kraj</option>
+                                        <option th:each="country: ${countries}"
+                                                th:text="${country.name}"
+                                                th:value="${country.id}">
+                                        </option>
+                                    </select></p>
+                                <p class="info-block-item editing-mode-block-item">Miasto: <input autocomplete="off" class="info-block-item-value" th:field="*{city}" th:value="*{city}" th:placeholder="*{city!=null && !city.equals('') } ? '[!]' + *{city} + '[!]' : '' "></p>
+                                <p class="info-block-item editing-mode-block-item">Ulica: <input autocomplete="off" class="info-block-item-value" th:field="*{street}" th:value="*{street}" th:placeholder="*{street!=null && !street.equals('') } ? '[!]' + *{street} + '[!]' : '' "></p>
+                                <p class="info-block-item editing-mode-block-item">Numer domu: <input autocomplete="off" class="info-block-item-value" th:field="*{houseNumber}" th:value="*{houseNumber}" th:placeholder="*{houseNumber!=null && !houseNumber.equals('') } ? '[!]' + *{houseNumber} + '[!]' : '' "></p>
+                                <p class="info-block-item editing-mode-block-item">Kod pocztowy: <input autocomplete="off" class="info-block-item-value" th:field="*{zipCode}" th:value="*{zipCode}" th:placeholder="*{zipCode!=null && !zipCode.equals('') } ? '[!]' + *{zipCode} + '[!]' : '' "></p>
+                            </div>
+                        </div>
+                        <div class="info-block">
+                            <div class="info-block-title">Adres zamieszkania</div>
+                            <div class="info-block-content" th:object="${student.currentAddress}">
+                                <p class="info-block-item editing-mode-block-item">Kraj:
+                                    <select required th:field="*{country}" class="info-block-item-value">
+                                        <option value="0" selected hidden>Kraj</option>
+                                        <option th:each="country: ${countries}"
+                                                th:text="${country.name}"
+                                                th:value="${country.id}">
+                                        </option>
+                                    </select></p>
+                                <p class="info-block-item editing-mode-block-item">Miasto: <input autocomplete="off" class="info-block-item-value" th:field="*{city}" th:value="*{city}" th:placeholder="*{city!=null && !city.equals('') } ? '[!]' + *{city} + '[!]' : '' "></p>
+                                <p class="info-block-item editing-mode-block-item">Ulica: <input autocomplete="off" class="info-block-item-value" th:field="*{street}" th:value="*{street}" th:placeholder="*{street!=null && !street.equals('') } ? '[!]' + *{street} + '[!]' : '' "></p>
+                                <p class="info-block-item editing-mode-block-item">Numer domu: <input autocomplete="off" class="info-block-item-value" th:field="*{houseNumber}" th:value="*{houseNumber}" th:placeholder="*{houseNumber!=null && !houseNumber.equals('') } ? '[!]' + *{houseNumber} + '[!]' : '' "></p>
+                                <p class="info-block-item editing-mode-block-item">Kod pocztowy: <input autocomplete="off" class="info-block-item-value" th:field="*{zipCode}" th:value="*{zipCode}" th:placeholder="*{zipCode!=null && !zipCode.equals('') } ? '[!]' + *{zipCode} + '[!]' : '' "></p>
+                                <p class="info-block-item editing-mode-block-item">Miejsce zamieszkania
+                                    <select required th:field="*{placeOfLiving}" class="info-block-item-value">
+                                        <option value="0" selected hidden>Miejsce zamieszkania</option>
+                                        <option th:each="placeOfLiving: ${placesOfLiving}"
+                                                th:text="${placeOfLiving.name} + (${placeOfLiving.roomSize} != 0 ? (' - ' + ${placeOfLiving.roomSize} + ' os') : '')"
+                                                th:value="${placeOfLiving.id}">
+                                        </option>
+                                    </select></p>
+                                <p class="info-block-item editing-mode-block-item">Rok rozpoczęczia: <input required autocomplete="off" class="info-block-item-value" th:field="*{startYear}" th:value="*{startYear}" th:placeholder="*{startYear!=null && !startYear.equals('') } ? '[!]' + *{startYear} + '[!]' : '' "></p>
+                                <p class="info-block-item editing-mode-block-item">Rok zakończenia:  <input required autocomplete="off" class="info-block-item-value" th:field="*{finishYear}" th:value="*{finishYear}" th:placeholder="*{finishYear!=null && !finishYear.equals('') } ? '[!]' + *{finishYear} + '[!]' : '' "></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-column">
+                    <div class="info-study">
+                        <div class="info-block">
+                            <div class="info-block-title">Stypendia</div>
+                            <div class="info-block-content" th:object="${student.scholarship}">
+                                <p class="info-block-item editing-mode-block-item">Data wydania: <input required autocomplete="off" type="text" onfocusin="(this.type='date')" onfocusout="(this.type='text')" th:field="*{dateOfGetting}" th:value="*{dateOfGetting}" th:placeholder="*{dateOfGetting!=null && !dateOfGetting.equals('') } ? '[!]' + *{dateOfGetting} + '[!]' : '' "class="info-block-item-value calendar" placeholder="info-block- && !-.equals('') item-value calenda!=nullr ? '[!]' info-block-ite+ m-value + '[!]' : '' calendar  wydania"/></p>
+                                <p class="info-block-item editing-mode-block-item">Data ustania: <input required autocomplete="off" type="text" onfocusin="(this.type='date')" onfocusout="(this.type='text')" th:field="*{dateOfTermination}" th:value="*{dateOfTermination}" th:placeholder="*{dateOfTermination!=null && !dateOfTermination.equals('') } ? '[!]' + *{dateOfTermination} + '[!]' : '' "class="info-block-item-value calendar" placeholder="info-block- && !-.equals('') item-value calenda!=nullr ? '[!]' info-block-ite+ m-value + '[!]' : '' calendar  wydania"/></p>
+                                <p class="info-block-item editing-mode-block-item">Wysokość: <input required autocomplete="off" class="info-block-item-value" th:field="*{actualAmount}" th:value="*{actualAmount}" th:placeholder="*{actualAmount!=null && !actualAmount.equals('') } ? '[!]' + *{actualAmount} + '[!]' : '' "></p>
+                                <p class="info-block-item editing-mode-block-item">Kwota do odliczenia: <span required id="decreasingAmountInput" th:text="*{decreasingAmount} + ' + '"></span> <input autocomplete="off" class="info-block-item-value" style="width: 100px;" th:field="*{customDecreasingAmount}" th:value="*{customDecreasingAmount}" th:placeholder="*{customDecreasingAmount!=null && !customDecreasingAmount.equals('') } ? '[!]' + *{customDecreasingAmount} + '[!]' : '' "></p>
+                                <p class="info-block-item editing-mode-block-item">Kwota do wypłaty: <input required autocomplete="off" class="info-block-item-value disabled" th:value="*{totalAmount}" disabled></p>
+                            </div>
+                        </div>
+                        <div class="info-block">
+                            <div class="info-block-title">Przebieg studiów</div>
+                            <div class="info-block-content" th:object="${student.study}">
+                                <p class="info-block-item editing-mode-block-item">Rok studiów: <input autocomplete="off" class="info-block-item-value" th:field="*{yearOfStudy}" th:value="*{yearOfStudy}" th:placeholder="*{yearOfStudy!=null && !yearOfStudy.equals('') } ? '[!]' + *{yearOfStudy} + '[!]' : '' "></span></p></p>
+                                <p class="info-block-item editing-mode-block-item">Semester studiów: <input autocomplete="off" class="info-block-item-value" th:field="*{actualSemester}" th:value="*{actualSemester}" th:placeholder="*{actualSemester!=null && !actualSemester.equals('') } ? '[!]' + *{actualSemester} + '[!]' : '' "></span></p>
+                                <p class="info-block-item editing-mode-block-item">Wydział:
+                                    <select id="faculty" th:field="*{faculty}" class="info-block-item-value">
+                                        <option value="0" selected hidden>Wydział</option>
+                                        <option th:each="faculty: ${faculties}"
+                                                th:text="${faculty.name}"
+                                                th:value="${faculty.id}">
+                                        </option>
+                                    </select></p>
+                                <p class="info-block-item editing-mode-block-item">Kierunek:
+                                    <select id="field_of_study" th:field="*{fieldOfStudy}" class="info-block-item-value">
+                                        <option value="0" selected hidden>Kierunek</option>
+                                        <option th:each="field: ${fields}"
+                                                th:text="${field.name}"
+                                                th:value="${field.id}">
+                                        </option>
+                                    </select></p>
+                                <p class="info-block-item editing-mode-block-item">Rodzaj studiów:
+                                    <select th:field="*{kindOfStudy}" class="info-block-item-value">
+                                        <option value="0" selected hidden>Rodzaj studiów</option>
+                                        <option th:each="kind: ${kinds}"
+                                                th:text="${kind.name}"
+                                                th:value="${kind.id}">
+                                        </option>
+                                    </select></p>
+                                <p class="info-block-item editing-mode-block-item">Typ studiów:
+                                    <select th:field="*{typeOfStudy}" class="info-block-item-value">
+                                        <option value="0" selected hidden>Typ studiów</option>
+                                        <option th:each="type: ${types}"
+                                                th:text="${type.name}"
+                                                th:value="${type.id}">
+                                        </option>
+                                    </select></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="info-block-content-wide" id="study-history" th:if="${countAvgGrades>0}">
+            <div class="grades-table-title">Historia studiów</div>
+            <div class="grades-tables-item grades-block">
+                <div class="grades-table-subtitle">Semestralne oceny</div>
+                <table class="table table-dark table-bordered table-hover grades-table" th:if="${countAvgGrades>0}">
+                    <thead>
+                    <tr>
+                        <th class="col-3">Wydział</th>
+                        <th class="col-3">Kierunek</th>
+                        <th class="col-2">Rodzaj studiów</th>
+                        <th class="col-2">Typ studiów</th>
+                        <th class="col-1">Semester</th>
+                        <th class="col-1">Ocena</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="grade : ${averageGrades}">
+                        <td th:text="${grade.faculty}" class="col-3"></td>
+                        <td th:text="${grade.fieldOfStudy}" class="col-3"></td>
+                        <td th:text="${grade.kindOfStudy}" class="col-2"></td>
+                        <td th:text="${grade.typeOfStudy}" class="col-2"></td>
+                        <td><input autocomplete="off" class="info-block-item-value disabled" th:name="semestr" th:value="${grade.semester}" disabled></td>
+                        <td><input autocomplete="off" class="info-block-item-value" th:name="ocena" th:value="${grade.averageGrade}" th:placeholder="'[!] ' + ${grade.averageGrade} + ' [!]'"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+            <input autocomplete="off" type="hidden" th:name="studentId" th:value="${student.id}"/>
+    </div>
+</form>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script th:inline="javascript">
+</script>
+</body>
+</html>

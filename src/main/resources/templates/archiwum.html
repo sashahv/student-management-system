@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="pl"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Archiwum</title>
+</head>
+<body lang="pl">
+<div class="top-menu">
+    <div class="wrapper">
+        <!--        <div class="main-title">Dom Fundacji Jana Pawła II w Lublinie</div>-->
+        <ul class="nav">
+            <li class="nav-item">
+                <a th:href="@{/dodawanie-stypendysty}">Dodawanie</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/stypendysci}">Stypendyści</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/raport}">Raport</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/panel-administracyjny}">Administracja</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/archiwum}" class="active">Archiwum</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/logout}">Wyloguj się</a>
+            </li>
+        </ul>
+        <p th:if="${message}">
+            <span th:text="${message}" id="success-message" style="font-size: 14px"></span>
+        </p>
+        <div id="page-name" class="page-top-panel" th:text="'Archiwum' + (${yearOfGraduation}!=null ? ' - ' + ${yearOfGraduation} + ' rok' : ' ')"></div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="top-panel">
+        <div class="student-search-field">
+            <img th:src="@{/images/search.svg}" alt="search" class="search-icon">
+            <input id="student-search" type="text" name="keyword" placeholder="Wyszukaj" autocomplete="off"/>
+            <div id="message-container"></div>
+        </div>
+        <div id="choosing-year-box" class="choosing-year-box">
+                <select id="year-of-graduation-select" th:field="${studentsByYearOfGraduation}" class="data-block-item data-dropdown">
+                    <option selected hidden th:value="0" th:text="(${yearOfGraduation}!=null ? ${yearOfGraduation} : 'Rok zakończenia')"></option>
+                    <option th:each="year: ${availableYears}"
+                            th:text="${year}"
+                            th:value="${year}">
+                    </option>
+                </select>
+        </div>
+        <div id="students-count">
+            <div class="students-count two-rows">Łączna liczba stypendystów</div>
+            <div id="students-count-second" class="students-count two-rows" th:text="'w archiwum' + (${yearOfGraduation}!=null ? ' ' + ${yearOfGraduation} + ' roku: ' : ': ') + ${totalItems}"></div>
+        </div>
+             </div>
+    <div class="table-wrap">
+        <table class="table table-bordered table-dark table-hover" id="students-table">
+            <thead>
+            <tr>
+                <th>
+                    <a th:href="@{'/archiwum'} +
+                                               (
+                                                 (${yearOfGraduation} != null) ?
+                                                 '?str=' + ${currentPage} + '&poleSort=name&kierSort=' + ${reverseSortDirection} + '&rokZakonczenia=' + ${yearOfGraduation} :
+                                                 '?str=' + ${currentPage} + '&poleSort=name&kierSort=' + ${reverseSortDirection}
+                                               )">
+                    Imię
+                    </a>
+                </th>
+                <th> <a th:href="@{'/archiwum'} +
+                                               (
+                                                 (${yearOfGraduation} != null) ?
+                                                 '?str=' + ${currentPage} + '&poleSort=surname&kierSort=' + ${reverseSortDirection} + '&rokZakonczenia=' + ${yearOfGraduation} :
+                                                 '?str=' + ${currentPage} + '&poleSort=surname&kierSort=' + ${reverseSortDirection}
+                                               )">
+                    Nazwisko
+                    </a>
+                </th>
+                <th> <a th:href="@{'/archiwum'} +
+                                               (
+                                                 (${yearOfGraduation} != null) ?
+                                                 '?str=' + ${currentPage} + '&poleSort=birthDate&kierSort=' + ${reverseSortDirection} + '&rokZakonczenia=' + ${yearOfGraduation} :
+                                                 '?str=' + ${currentPage} + '&poleSort=birthDate&kierSort=' + ${reverseSortDirection}
+                                               )">
+                    Data urodzenia
+                </a>
+                </th>
+                <th> <a th:href="@{'/archiwum'} +
+                                               (
+                                                 (${yearOfGraduation} != null) ?
+                                                 '?str=' + ${currentPage} + '&poleSort=yearOfGraduation&kierSort=' + ${reverseSortDirection} + '&rokZakonczenia=' + ${yearOfGraduation} :
+                                                 '?str=' + ${currentPage} + '&poleSort=yearOfGraduation&kierSort=' + ${reverseSortDirection}
+                                               )">
+                    Rok zakończenia
+                      </a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="student : ${studentsByYearOfGraduation}" th:onclick="'window.location.href=\'/archiwum/stypendysta?id=' + ${student.id} + '\''">
+                <td th:text="${student.name}"></td>
+                <td th:text="${student.surname}"></td>
+                <td th:text="${#temporals.format(student.birthDate, 'dd MMMM yyyy', new java.util.Locale('pl', 'PL'))}"></td>
+                <td th:text="${student.yearOfGraduation}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="pagination-controls" th:if="${totalPages > 1 && yearOfGraduation==null}">
+            <div class="pagination-item">
+                <a class="prev" th:if="${currentPage > 1}"
+                   th:href="@{'/archiwum?str=' + ${currentPage-1} + '&poleSort=' + ${sortField} + '&kierSort=' + ${sortDirection}}"><</a>
+            </div>
+            <div class="pagination-item number">
+                            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                                <a th:if="${currentPage != i}"
+                                   th:href="@{'/archiwum?str=' + ${i} + '&poleSort=' + ${sortField} + '&kierSort=' + ${sortDirection}}">[[${i}]]</a>
+                                <span th:unless="${currentPage != i}" class="active">[[${i}]]</span>
+                            </span>
+            </div>
+            <div class="pagination-item">
+                <a class="next" th:if="${currentPage < totalPages}"
+                   th:href="@{'/archiwum?str=' + ${currentPage+1} + '&poleSort=' + ${sortField} + '&kierSort=' + ${sortDirection}}">></a>
+            </div>
+    </div>
+</div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let studentsByYearOfGraduation = /*[[${studentsByYearOfGraduation}]]*/'';
+    let students = /*[[${studentsFiltered}]]*/'';
+    let yearOfGraduation = /*[[${yearOfGraduation}]]*/'';
+    /*<![CDATA[*/
+
+    let studentSearch = $('#student-search');
+
+    let studentsCount = $('#students-count')
+    let choosingYearBox = $('#choosing-year-box');
+
+    $('#student-search').on('keyup', function () {
+        let value = $(this).val();
+
+        if(yearOfGraduation!=null){
+            setTimeout(function(){
+                $('#page-name').text('Archiwum')
+                studentsCount.css({'opacity': 0})
+                choosingYearBox.css({'opacity': 0})
+            }, 100);
+        }
+
+        if (!value) {
+            // clear the filters and return the standard table
+
+            if(yearOfGraduation!=null){
+                setTimeout(function(){
+                    $('#page-name').text('Archiwum - ' + yearOfGraduation + ' rok')
+                    studentsCount.css({'opacity': 1})
+                    choosingYearBox.css({'opacity': 1})
+                }, 100);
+            }
+            rebuildTable(studentsByYearOfGraduation);
+            $('#message-container').text('');
+            return;
+        }
+
+            let filteredData = filterFunction(value, students);
+
+            if (filteredData.length === 0) {
+                // show a message when no matches are found
+                $('#message-container').text('Brak wyników');
+
+            } else {
+                // clear the message
+                $('#message-container').text('');
+                // rebuild the table with the filtered data
+                rebuildTable(filteredData);
+            }
+        });
+
+    function filterFunction(value, data) {
+        let filteredData = [];
+        for (let i = 0; i < data.length; i++) {
+            value = value.toLowerCase();
+            let name = data[i].name.toLowerCase();
+            let surname = data[i].surname.toLowerCase();
+            if ((name+' '+surname).includes(value) || (surname+' '+name).includes(value)) {
+                filteredData.push(data[i]);
+            }
+        }
+        return filteredData;
+
+    }
+    /*<![CDATA[*/
+
+    let nameLink = /*[[@{'/archiwum'} +
+    (
+        (${yearOfGraduation} != null) ?
+        '?str=' + ${currentPage} + '&poleSort=yearOfGraduation&kierSort=' + ${reverseSortDirection} + '&rokZakonczenia=' + ${yearOfGraduation} :
+        '?str=' + ${currentPage} + '&poleSort=yearOfGraduation&kierSort=' + ${reverseSortDirection}
+    )]]*/'';
+    let surnameLink = /*[[@{'/archiwum'} +
+    (
+        (${yearOfGraduation} != null) ?
+        '?str=' + ${currentPage} + '&poleSort=surname&kierSort=' + ${reverseSortDirection} + '&rokZakonczenia=' + ${yearOfGraduation} :
+        '?str=' + ${currentPage} + '&poleSort=surname&kierSort=' + ${reverseSortDirection}
+    )]]*/'';
+    let yearOfGraduationLink = /*[[@{'/archiwum'} +
+    (
+        (${yearOfGraduation} != null) ?
+        '?str=' + ${currentPage} + '&poleSort=yearOfGraduation&kierSort=' + ${reverseSortDirection} + '&rokZakonczenia=' + ${yearOfGraduation} :
+        '?str=' + ${currentPage} + '&poleSort=yearOfGraduation&kierSort=' + ${reverseSortDirection}
+    )]]*/'';
+    let birthDateLink = /*[[@{'/archiwum'} +
+    (
+        (${yearOfGraduation} != null) ?
+        '?str=' + ${currentPage} + '&poleSort=birthDate&kierSort=' + ${reverseSortDirection} + '&rokZakonczenia=' + ${yearOfGraduation} :
+        '?str=' + ${currentPage} + '&poleSort=birthDate&kierSort=' + ${reverseSortDirection}
+    )]]*/'';
+
+    /*<![CDATA[*/
+
+
+    function rebuildTable(data) {
+        let table = document.getElementById('students-table');
+        table.innerHTML = '<thead>\n' +
+            '        <tr>\n' +
+            '            <th><a href="' + nameLink + '">Imię</a></th>\n' +
+            '            <th><a href="' + surnameLink + '">Nazwisko</a></th>\n' +
+            '            <th><a href="' + birthDateLink + '">Data urodzenia</a></th>\n' +
+            '            <th><a href="' + yearOfGraduationLink + '">Rok zakończenia</a></th>\n' +
+            '        </tr>\n' +
+            '        </thead><tbody>'
+        for (let i = 0; i < data.length; i++) {
+            let birthDate = new Date(data[i].birthDate);
+            let options = {year: 'numeric', month: 'long', day: 'numeric'};
+            let formattedDate = birthDate.toLocaleDateString('pl-PL', options);
+            let row =
+                '<tr onclick="window.location.href = \'/stypendysci/stypendysta?id=' + data[i].id + '\'">' +
+                '<td>' + data[i].name + '</td>\n' +
+                '<td>' + data[i].surname + '</td>\n' +
+                '<td>' + formattedDate + '</td>\n' +
+                '<td>' + data[i].yearOfGraduation + '</td>' +
+                '</tr>';
+            table.innerHTML += row;
+        }
+        table.innerHTML += '</tbody>';
+    }
+
+        document.getElementById("year-of-graduation-select")
+        .addEventListener("change", function() {
+            selectedYear = this.value
+            window.location.href = '/archiwum?str=1&poleSort=surname&kierSort=asc&rokZakonczenia=' + selectedYear;
+        });
+
+    let successMessage = document.getElementById("success-message");
+    if(successMessage.innerText!==""){
+        setTimeout(function() {
+            successMessage.style.width="0";
+            successMessage.style.padding="0";
+            successMessage.innerText="";
+            successMessage.style.transition=".3s linear";
+        }, 3000);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Stypendyści</title>
+</head>
+<script th:inline="javascript">
+</script>
+<body>
+<div class="top-menu">
+    <div class="wrapper">
+        <ul class="nav">
+            <li class="nav-item">
+                <a th:href="@{/dodawanie-stypendysty}">Dodawanie</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/stypendysci}">Stypendyści</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/raport}" class="active">Raport</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/panel-administracyjny}">Administracja</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/archiwum}">Archiwum</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/logout}">Wyloguj się</a>
+            </li>
+        </ul>
+        <div class="page-top-panel">
+            <span>Raportowanie</span>
+        </div>
+    </div>
+</div>
+<section class="report">
+    <div class="wrapper">
+        <form th:action="@{/raport/lista-studentow.pdf}" onsubmit="return validateForm()" th:method="post">
+            <div class="report-content">
+                <div class="report-content-title">Wybór opcji</div>
+                <div>
+                    <select th:name="miejsceZam" class="fields-choosing-dropdown">
+                        <option value=" " selected>Miejsce zamieszkania</option>
+                        <option th:each="placeOfLiving : ${placesOfLiving}"
+                                th:text="${placeOfLiving.name} + (${placeOfLiving.roomSize} != 0 ? (' - ' + ${placeOfLiving.roomSize} + ' os') : '')"
+                                th:value="${placeOfLiving.id}">
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select th:name="plec" class="fields-choosing-dropdown">
+                        <option value=" " selected>Płeć</option>
+                        <option th:each="gender : ${genders}"
+                                th:text="${gender.name}"
+                                th:value="${gender.name()}">
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select th:name="rodzajSt" class="fields-choosing-dropdown">
+                        <option value=" " selected>Rodzaj studiow</option>
+                        <option th:each="kind : ${kinds}"
+                                th:text="${kind.name}"
+                                th:name="rodzaj"
+                                th:value="${kind.id}">
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select th:name="wydzial" id="faculty-select" class="fields-choosing-dropdown">
+                        <option value=" " selected>Wydzial</option>
+                        <option th:each="faculty : ${faculties}"
+                                th:text="${faculty.name}"
+                                th:value="${faculty.id}">
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select th:name="kierunek" class="fields-choosing-dropdown">
+                        <option value=" " selected>Kierunek</option>
+                        <option th:each="field : ${fields}"
+                                th:text="${field.name}"
+                                th:value="${field.id}">
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select th:name="typSt" class="fields-choosing-dropdown">
+                        <option value=" " selected>Typ studiow</option>
+                        <option th:each="type : ${types}"
+                                th:text="${type.name}"
+                                th:value="${type.id}">
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select th:name="krajUrodzenia" class="fields-choosing-dropdown">
+                        <option value=" " selected disabled>Kraj urodzenia</option>
+                        <option th:each="country : ${countries}"
+                                th:text="${country.name}"
+                                th:value="${country.id}">
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select th:name="rokSt" class="fields-choosing-dropdown">
+                        <option value=" " selected disabled>Rok studiów</option>
+                        <option th:each="num : ${#numbers.sequence(1,5)}"
+                                th:value="${num}"
+                                th:text="${num}">
+                        </option>
+                    </select>
+                </div>
+                <div id="select-type">
+                    <p>Typ listy</p>
+                    <select id="selection-option" th:name="tabId" class="fields-choosing-dropdown">
+                        <option th:value="1" selected>Czyste kolumny</option>
+                        <option th:value="2">Nazwisko, imię</option>
+                        <option th:value="3">Nazwisko, imię, płeć, data, miejsce, kraj urodzenia</option>
+                        <option th:value="4">Nazwisko, imię, płeć, data, miejsce, kraj, adres stałego zamieszkania</option>
+                        <option th:value="5">Nazwisko, imię, płeć, data, miejsce, kraj, adres zamieszkania</option>
+                        <option th:value="6">Nazwisko, imię, wysokość stypendium</option>
+                        <option th:value="7">Nazwisko, imię, ostatni semestr, średnia ocena</option>
+                        <option th:value="8">Nazwisko, imię, średnie oceny za każdy semestr</option>
+                        <option th:value="9">Nazwisko, imię, kierunek, rok, rodzaj studiów</option>
+                        </option>
+                    </select>
+                </div>
+                <div id="tables-config">
+                    <div class="tables-config-block">
+                        <p>Ustawienia</p>
+                        <input type="text" class="tables-config-title-input" th:name="tytulDokumentu" placeholder="Podaj tytuł dokumentu"/>
+                        <div class="input-fields">
+                            <label id="tables-config-additional-columns">
+                                Liczba pustych kolumn:ㅤ <input autocomplete="off" onfocus="closeErrorMessage()" type="text" class="config-input" th:name="ilPustychKolumn" th:value="0"
+                                                               style="margin-left: -3px">
+                            </label>
+                            <label id="tables-config-additional-rows">
+                                Liczba pustych wierszy: ㅤ<input autocomplete="off" onfocus="closeErrorMessage()" type="text" class="config-input" th:name="ilPustychWierszy" th:value="0">
+                            </label>
+                        </div>
+                        <textarea th:name="tytuly" placeholder="Podaj tytuły pustych kolumn przez przecinek"></textarea>
+                        <div class="buttons">
+                            <button>Zatwierdź</button>
+                            <a th:href="@{/raport}">Anuluj</a>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="avg-grades-config">
+                    <div class="avg-grades-config-block">
+                        <p>Ustawienia</p>
+                        <input autocomplete="off" type="text" class="tables-config-title-input" th:name="tytulDokumentu" placeholder="Podaj tytuł dokumentu"/>
+                        <div class="buttons">
+                            <button>Zatwierdź</button>
+                            <a th:href="@{/raport}">Anuluj</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="clean-columns-settings">
+                    <div class="clean-columns-settings-block">
+                        <p>Ustawienia</p>
+                        <input type="text" class="tables-config-title-input" th:name="tytulDokumentu" placeholder="Podaj tytuł dokumentu"/>
+                        <div class="input-fields">
+                            <label id="settings-columns">
+                                Liczba kolumn:ㅤ <input autocomplete="off" class="config-input" onfocus="closeErrorMessage()" type="text" th:name="ilKolumn" th:value="1"
+                                                       style="margin-left: -3px">
+                            </label>
+                            <label id="settings-rows">
+                                Liczba wierszy: ㅤ<input autocomplete="off" class="config-input" onfocus="closeErrorMessage()" type="text" th:name="ilWierszy" th:value="1">
+                            </label>
+                        </div>
+                        <textarea th:name="tytuly" placeholder="Podaj tytuły kolumn przez przecinek"></textarea>
+                        <div class="input-checkbox">
+                            <span id="settings-select-text">Typ wierszy: </span>
+                            <select th:name="typListy" class="settings-select">
+                                <option value="czysta">Bez numeracji</option>
+                                <option value="numerowana">Numerowane</option>
+                            </select>
+                        </div>
+                        <div class="buttons">
+                            <button>Zatwierdź</button>
+                            <a th:href="@{/raport}">Anuluj</a>
+                        </div>
+                    </div>
+                </div>
+                <button id="confirm-search-button" type="button">Wyszukaj</button>
+            </div>
+        </form>
+    </div>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script th:inline="javascript">
+    let dropdowns = document.getElementsByClassName("fields-choosing-dropdown");
+    for (let i = 0; i < dropdowns.length; i++) {
+        dropdowns[i].addEventListener("change", function () {
+            if (this.value && this.value != 0) {
+                this.style.color = "#000000";
+                this.style.fontWeight = "700"
+                this.style.backgroundColor = "#b2b2b2"
+            } else {
+                this.style.color = "#868686";
+                this.style.fontWeight = "400"
+                this.style.backgroundColor = "#ffffff"
+            }
+        });
+    }
+
+
+    let cleanTable = document.getElementById("clean-columns-settings");
+    let tablesSettings = document.getElementById("tables-config");
+    let avgGradesSettings = document.getElementById("avg-grades-config");
+
+    $("#confirm-search-button").click(function () {
+        if ($("#selection-option").val() == 1) {
+            cleanTable.style.visibility = "visible"
+        } else if ($("#selection-option").val() == 8) {
+            avgGradesSettings.style.visibility = "visible"
+        } else {
+            tablesSettings.style.visibility = "visible"
+        }
+    })
+
+    function validateForm() {
+        let configInputs = document.getElementsByClassName("config-input");
+        for (let i = 0; i < configInputs.length; i++) {
+            if (!configInputs[i].value || configInputs[i].value.trim() === "" || configInputs[i].value<0) {
+                configInputs[i].style.border = "4px solid red";
+                return false
+            }
+        }
+
+        configInputs.style.border = "none";
+        return true;
+    }
+
+    function closeErrorMessage(){
+        let configInputs = document.getElementsByClassName("config-input");
+        for (let i = 0; i < configInputs.length; i++) {
+            configInputs[i].style.border="none"
+        }
+    }
+
+</script>
+</body>
+</html>

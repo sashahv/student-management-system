@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Stypendyści</title>
+</head>
+<script th:inline="javascript">
+</script>
+<body>
+<div class="top-menu">
+    <div class="wrapper">
+        <ul class="nav">
+            <li class="nav-item">
+                <a th:href="@{/dodawanie-stypendysty}">Dodawanie</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/stypendysci}">Stypendyści</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/raport}">Raport</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/panel-administracyjny}" class="active">Administracja</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/archiwum}">Archiwum</a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/logout}">Wyloguj się</a>
+            </li>
+        </ul>
+        <div class="page-top-panel">
+            <span>Preniesinie na następny semestr</span>
+        </div>
+    </div>
+</div>
+<section class="change-semester">
+    <div class="wrapper">
+        <div class="table-wrap">
+            <form th:action="@{/panel-administracyjny/zwiekszenie-semestru}" enctype="multipart/form-data"
+                              onsubmit="return validateForm()" th:object="${studentGradeMap}" method="post">
+                <table class="table table-bordered table-dark table-hover" id="students-table">
+                    <thead id="students-thead">
+                    <tr>
+                        <th class="col-3">Imię
+                        <th class="col-2">Nazwisko</th>
+                        <th class="col-1">Semestr</th>
+                        <th class="col-2">Ocena</th>
+                        <th class="col-2">Karta ocen</th>
+                        <th class="col-2">Działania</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="student : ${students}">
+                        <td class="col-3" th:text="${student.name}"></td>
+                        <td class="col-2" th:text="${student.surname}"></td>
+                        <td class="col-1" th:text="${student.study.actualSemester}"></td>
+                        <td class="col-2">
+                            <input type="hidden" th:name="studentId" th:value="${student.id}"/>
+                            <input onfocus="closeErrorMessage()" class="change-semester-input" type="text"
+                                   th:name="ocena" autocomplete="off"/>
+                        </td>
+                        <td class="col-2">
+                            <a id="choose-file-button" class="choose-file-button" href="#">Wybierz plik</a>
+                            <input type="file" id="change-semester-file-input" class="change-semester-file-input"
+                                   th:name="pliki" style="display: none;">
+                        </td>
+                        <td class="col-2">
+                            <div class="actions-buttons">
+                                <a class="action-button" th:onclick="'deleteStudent(this, ' + ${student.id} + ')'"
+                                   type="button">
+                                    <img th:src="@{/images/inactive.svg}" alt="" class="action-button-icon">
+                                    <span id="deactivate-tip" class="tip-text">Nie przenosić</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button type="button" id="confirm-block-confirm-button">Zatwierdź</button>
+                <div id="confirm-block" class="confirming-block">
+                    <div class="confirming-block-content">
+                        <div class="confirming-block-content-title">Zatwierdzić zmiany?</div>
+                        <div>
+                            <button class="submit-button" type="submit">Zatwierdzić</button>
+                            <button id="cancel-button" type="button" class="cancel">Anulować</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script th:inline="javascript">
+    let confirmBlock = document.getElementById("confirm-block");
+    document.getElementById("cancel-button").addEventListener("click", function () {
+        confirmBlock.style.display = "none";
+    });
+
+    document.getElementById("confirm-block-confirm-button").addEventListener("click", function () {
+        confirmBlock.style.display = "flex";
+    })
+
+    function deleteStudent(button, studentId) {
+        let row = button.parentNode.parentNode.parentNode;
+        row.remove();
+    }
+
+    $('#students-table tbody tr').each(function() {
+        var button = $(this).find('.choose-file-button');
+        var fileInput = $(this).find('.change-semester-file-input');
+
+        button.click(function(e) {
+            e.preventDefault();
+            fileInput.click();
+        });
+        fileInput.change(function() {
+            button.css('color', '#398536FF');
+            button.html('Plik wybrany')
+        });
+    });
+
+
+
+    function validateForm() {
+        let gradeFields = document.getElementsByClassName("change-semester-input");
+        for (let i = 0; i < gradeFields.length; i++) {
+            if (!gradeFields[i].value || gradeFields[i].value.trim() === "" || gradeFields[i].value < 1 || gradeFields[i].value > 5) {
+                gradeFields[i].style.border = "4px solid red";
+                gradeFields[i].scrollIntoView({behavior: "smooth", block: "center"});
+                confirmBlock.style.display = "none";
+                return false
+            }
+        }
+
+        gradeFields.style.border = "none";
+        return true;
+    }
+
+    function closeErrorMessage() {
+        let gradeFields = document.getElementsByClassName("change-semester-input");
+        for (let i = 0; i < gradeFields.length; i++) {
+            gradeFields[i].style.border = "none"
+        }
+    }
+
+    //     let fileInputs = document.getElementsByClassName('change-semester-file-input');
+    //     let buttons = document.getElementsByClassName('choose-file-button');
+    //
+    //     for (let i = 0; i < fileInputs.length; i++) {
+    //         fileInputs[i].addEventListener('change', function (){
+    //         if (fileInputs[i].value) {
+    //             buttons[i].style.color = '#51832AFF';
+    //             buttons[i].innerHTML = 'Plik wybrany';
+    //         } else {
+    //             buttons[i].style.color = '#ffffff';
+    //             buttons[i].innerHTML = 'Wybierz plik';
+    //         }
+    // })}
+</script>
+</body>
+</html>
