@@ -11,14 +11,17 @@ The system is designed for use by a single administrator, who must be authorized
 - Store student information in a secure, centralized archive
 - Generate reports with multiple filters to analyze student information
 - Print documents related to student studies
+- Uploading PDF files with grades for students after the end of the semester when administrator inputs average grade
+- Automatically generated PDF file with final grades for student after adding him to archive that depends on grades during studies.
 
 ## Technologies Used
 - Java 17
 - Spring Boot 3.0.1
-- Spring JPA
 - Spring Security
 - Maven
 - Hibernate
+- JUnit
+- Jakarta Servlet API
 - Thymeleaf
 - Javascript
 
