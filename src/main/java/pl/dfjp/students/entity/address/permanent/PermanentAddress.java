@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import pl.dfjp.students.entity.Country;
 import pl.dfjp.students.entity.student.ArchivedStudent;
 import pl.dfjp.students.entity.student.Student;
@@ -31,6 +33,7 @@ public class PermanentAddress {
 
     @JsonIgnore
     @OneToOne(mappedBy = "permanentAddress")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Student student;
 
     @JsonIgnore

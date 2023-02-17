@@ -8,7 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Stypendyści</title>
+    <title>Baza danych DFJP2</title>
 </head>
 <script th:inline="javascript">
 </script>
@@ -45,7 +45,7 @@
 <form th:action="@{/stypendysci/edytowanie(id=${student.id})}" th:object="${student}" method="POST">
 <div class="student-control-block">
     <div class="wrapper">
-        <div class="student-control-block-content">
+        <div class="student-control-block-content edit">
             <button class="student-controls" id="student-controls-confirm" type="submit"><b>Zatwierdź</b></button>
             <a class="student-controls" th:href="@{/stypendysci/stypendysta(id=${student.id})}">Anuluj</a>
         </div>

@@ -1,29 +1,32 @@
 package pl.dfjp.students.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import pl.dfjp.students.entity.student.ArchivedStudent;
 import pl.dfjp.students.entity.student.Attachment;
 import pl.dfjp.students.entity.student.Student;
 import pl.dfjp.students.exception.StudentNotFoundException;
+import pl.dfjp.students.repository.student.ArchivedStudentRepository;
 import pl.dfjp.students.repository.student.AttachmentRepository;
 import pl.dfjp.students.repository.student.StudentRepository;
 import pl.dfjp.students.utils.FileUtils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class AttachmentService {
 
     private final AttachmentRepository attachmentRepository;
     private final StudentRepository studentRepository;
+    private final ArchivedStudentRepository archivedStudentRepository;
 
     public AttachmentService(AttachmentRepository attachmentRepository,
-                             StudentRepository studentRepository) {
+                             StudentRepository studentRepository,
+                             ArchivedStudentRepository archivedStudentRepository) {
         this.attachmentRepository = attachmentRepository;
         this.studentRepository = studentRepository;
+        this.archivedStudentRepository = archivedStudentRepository;
     }
 
     public Attachment saveAttachment(Long studentId,
@@ -36,11 +39,28 @@ public class AttachmentService {
 
         String fileName = student.getName() + "_" + student.getSurname() + "_" + semester + "_sem.pdf";
 
-        Attachment attachment = new Attachment(fileName,
-                    file.getContentType(),
-                    FileUtils.compressFile(file.getBytes()),
-                    student);
-            return attachmentRepository.save(attachment);
+        Attachment attachment = new Attachment();
+        attachment.setFileName(fileName);
+        attachment.setFileType(file.getContentType());
+        attachment.setData(FileUtils.compressFile(file.getBytes()));
+        attachment.setStudent(student);
+        return attachmentRepository.save(attachment);
+    }
+
+    public Attachment saveAttachmentForArchivedStudent(Long studentId,
+                                                       MultipartFile file) throws Exception {
+        ArchivedStudent archivedStudent = archivedStudentRepository.findById(studentId).orElseThrow(
+                () -> new StudentNotFoundException("Student z indeksem " + studentId + " nie znaleziony w archiwum")
+        );
+
+        String fileName = archivedStudent.getName() + "_" + archivedStudent.getSurname() + "_końcowa_karta_ocen.pdf";
+
+        Attachment attachment = new Attachment();
+        attachment.setFileName(fileName);
+        attachment.setFileType(file.getContentType());
+        attachment.setData(file.getBytes());
+        attachment.setArchivedStudent(archivedStudent);
+        return attachmentRepository.save(attachment);
     }
 
     public void saveAttachmentsForAllStudents(HashMap<Long, MultipartFile> filesMap) throws Exception {
@@ -54,13 +74,13 @@ public class AttachmentService {
         }
     }
 
-    public Attachment getAttachment(String id)  {
+    public Attachment getAttachment(String id) {
         return attachmentRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Nie istnieje pliku z id: " + id)
         );
     }
 
-    public Attachment deleteAttachment(String id){
+    public Attachment deleteAttachment(String id) {
         Attachment attachment = attachmentRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Nie istnieje pliku z id: " + id)
         );

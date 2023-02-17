@@ -28,10 +28,7 @@ public class Attachment {
     @ManyToOne
     private Student student;
 
-    public Attachment(String fileName, String fileType, byte[] data, Student student) {
-        this.fileName = fileName;
-        this.fileType = fileType;
-        this.data = data;
-        this.student = student;
-    }
+    @JsonIgnore
+    @ManyToOne
+    private ArchivedStudent archivedStudent;
 }

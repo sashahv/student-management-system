@@ -8,7 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Stypendyści</title>
+    <title>Baza danych DFJP2</title>
 </head>
 <script th:inline="javascript">
 </script>
@@ -20,7 +20,7 @@
                 <a th:href="@{/dodawanie-stypendysty}">Dodawanie</a>
             </li>
             <li class="nav-item">
-                <a th:href="@{/stypendysci}" class="active">Stypendyści</a>
+                <a th:href="@{/stypendysci}">Stypendyści</a>
             </li>
             <li class="nav-item">
                 <a th:href="@{/raport}">Raport</a>
@@ -29,7 +29,7 @@
                 <a th:href="@{/panel-administracyjny}">Administracja</a>
             </li>
             <li class="nav-item">
-                <a th:href="@{/archiwum}">Archiwum</a>
+                <a th:href="@{/archiwum}" class="active">Archiwum</a>
             </li>
             <li class="nav-item">
                 <a th:href="@{/logout}">Wyloguj się</a>
@@ -39,7 +39,7 @@
             <span th:text="${message}" id="success-message"></span>
         </p>
         <div class="page-top-panel">
-            <span th:text="${student.name} + ' ' + ${student.surname}"></span>
+            <span th:text="${student.name} + ' ' + ${student.surname} + ' - archiwum'"></span>
         </div>
     </div>
 </div>
@@ -122,6 +122,11 @@
                                                                       th:text="*{typeOfStudy?.name}"></span></p>
                     </div>
                 </div>
+                <div class="all-grades">
+                    <a th:href="@{/karty-ocen/karta?id=b04fd06c-f5d6-45fe-9d0a-ac86761d714b}">
+                        <button>Zobacz ogólną kartę ocen</button>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="info-block-content-wide" id="study-history" th:if="${countAvgGrades>0}">
@@ -188,7 +193,7 @@
             successMessage.style.width="0";
             successMessage.style.padding="0";
             successMessage.innerText="";
-            successMessage.style.transition=".3s linear";
+            successMessage.style.transition=".8s linear";
         }, 3000);
     }
 </script>

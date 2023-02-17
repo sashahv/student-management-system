@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
     @Modifying
-    @Query(value = "DELETE FROM student s WHERE id=?1 ", nativeQuery = true)
+    @Query(value = "DELETE FROM student s WHERE s.id=?1 ", nativeQuery = true)
     void deleteStudentWithoutInformation(Long studentId);
 
     @Query("SELECT s " +

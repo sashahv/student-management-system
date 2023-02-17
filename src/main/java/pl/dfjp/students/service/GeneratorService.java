@@ -74,6 +74,7 @@ public class GeneratorService {
         generatedCurrentAddress.setStartYear(dateOfGetting.getYear());
         generatedCurrentAddress.setFinishYear(dateOfTermination.getYear());
         generatedCurrentAddress.setPlaceOfLiving(currentAddress.getPlaceOfLiving());
+        generatedCurrentAddress.setStudent(student);
         currentAddressRepository.save(generatedCurrentAddress);
         return generatedCurrentAddress;
     }
@@ -131,6 +132,7 @@ public class GeneratorService {
         generatedScholarship.setDecreasingAmount(decreasingAmount);
         generatedScholarship.setCustomDecreasingAmount(scholarship.getCustomDecreasingAmount());
         generatedScholarship.setTotalAmount();
+        generatedScholarship.setStudent(student);
         scholarshipRepository.save(generatedScholarship);
         return generatedScholarship;
     }

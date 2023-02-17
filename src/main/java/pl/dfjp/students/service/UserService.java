@@ -19,10 +19,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User createUser(UserDTO userDTO){
-        User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        return userRepository.save(user);
-    }
+//    public User createUser(UserDTO userDTO){
+//        User user = new User();
+//        user.setUsername(userDTO.getUsername());
+//        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+//        return userRepository.save(user);
+//    }
 }

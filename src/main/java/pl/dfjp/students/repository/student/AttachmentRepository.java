@@ -11,4 +11,6 @@ public interface AttachmentRepository extends JpaRepository<Attachment, String> 
     void deleteAllByStudentId(Long studentId);
 
     List<Attachment> findAllByStudentId(Long studentId);
+
+    Attachment findByArchivedStudentId(Long id);
 }

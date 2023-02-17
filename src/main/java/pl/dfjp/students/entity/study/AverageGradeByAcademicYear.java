@@ -16,7 +16,7 @@ public class AverageGradeByAcademicYear {
     private Long id;
     private double averageGrade;
     private int academicYear;
-    private String faculty;
+    private String faculty; //TODO
     private String fieldOfStudy;
     private String kindOfStudy;
     private String typeOfStudy;

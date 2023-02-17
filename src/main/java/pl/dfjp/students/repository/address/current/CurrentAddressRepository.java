@@ -17,9 +17,6 @@ public interface CurrentAddressRepository extends JpaRepository<CurrentAddress, 
 
     List<CurrentAddress> findByPlaceOfLivingId(Long id);
 
-    @Modifying
-    @Query(value = "DELETE FROM current_address c WHERE c.id IN " +
-            "(SELECT current_address_id FROM student s WHERE s.id=?1)", nativeQuery = true)
     void deleteCurrentAddressByStudentId(Long studentId);
 
 }

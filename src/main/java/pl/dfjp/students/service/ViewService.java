@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import pl.dfjp.students.entity.Country;
 import pl.dfjp.students.entity.address.current.PlaceOfLiving;
+import pl.dfjp.students.entity.scholarship.Scholarship;
 import pl.dfjp.students.entity.student.ArchivedStudent;
 import pl.dfjp.students.entity.student.Attachment;
 import pl.dfjp.students.entity.student.Gender;
@@ -100,11 +101,15 @@ public class ViewService {
 
     public void showAdministrationPanelPage(Model model) {
         List<PlaceOfLiving> placesOfLiving = placeOfLivingRepository.findAll();
-//        placesOfLiving.sort(Comparator.comparing(PlaceOfLiving::getName).thenComparing(PlaceOfLiving::getRoomSize));
         model.addAttribute("students", studentRepository.findAll());
         model.addAttribute("placesOfLiving", placesOfLiving);
         model.addAttribute("countries", countryRepository.findAll());
-        model.addAttribute("actualScholarship", scholarshipRepository.findAll().get(0).getActualAmount());
+        List<Scholarship> allScholarships = scholarshipRepository.findAll();
+        if(!allScholarships.isEmpty()) {
+            model.addAttribute("actualScholarship", allScholarships.get(0).getActualAmount());
+        } else {
+            model.addAttribute("actualScholarship", 0);
+        }
         model.addAttribute("faculty", new Faculty());
         model.addAttribute("fieldOfStudy", new FieldOfStudy());
         model.addAttribute("kindOfStudy", new KindOfStudy());
@@ -217,15 +222,18 @@ public class ViewService {
         avgGrades.sort(Comparator.comparing(AverageGradeBySemester::getSemester).reversed());
         List<AverageGradeByAcademicYear> avgGradesByYear = averageGradeByAcademicYearRepository.findAllByStudyId(studyId);
         avgGradesByYear.sort(Comparator.comparing(AverageGradeByAcademicYear::getAcademicYear).reversed());
+        Attachment attachment = attachmentRepository.findByArchivedStudentId(studentId);
         long countAvgGradesByYear = avgGradesByYear.size();
         long countAvgGrades = avgGrades.size();
         LocalDate now = LocalDate.now(ZoneId.of("Europe/Warsaw"));
+
         model.addAttribute("student", student);
         model.addAttribute("now", now);
         model.addAttribute("countAvgGradesByYear", countAvgGradesByYear);
         model.addAttribute("countAvgGrades", countAvgGrades);
         model.addAttribute("averageGrades", avgGrades);
         model.addAttribute("averageGradesByYear", avgGradesByYear);
+        model.addAttribute("attachment", attachment);
         studyService.addStudyObjects(model);
     }
 

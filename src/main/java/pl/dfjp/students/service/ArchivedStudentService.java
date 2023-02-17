@@ -1,5 +1,6 @@
 package pl.dfjp.students.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,7 @@ import org.springframework.stereotype.Service;
 import pl.dfjp.students.entity.student.ArchivedStudent;
 import pl.dfjp.students.entity.student.Student;
 import pl.dfjp.students.exception.StudentNotFoundException;
-import pl.dfjp.students.repository.address.current.CurrentAddressRepository;
-import pl.dfjp.students.repository.scholarship.ScholarshipRepository;
 import pl.dfjp.students.repository.student.ArchivedStudentRepository;
-import pl.dfjp.students.repository.student.AttachmentRepository;
 import pl.dfjp.students.repository.student.StudentRepository;
 
 import java.time.LocalDate;
@@ -22,21 +20,18 @@ import java.util.List;
 public class ArchivedStudentService {
     private final ArchivedStudentRepository archivedStudentRepository;
     private final StudentRepository studentRepository;
-    private final AttachmentRepository attachmentRepository;
-    private final CurrentAddressRepository currentAddressRepository;
-    private final ScholarshipRepository scholarshipRepository;
+    private final AttachmentService attachmentService;
+    private final ListOfGradesService listOfGradesService;
 
     @Autowired
     public ArchivedStudentService(ArchivedStudentRepository archivedStudentRepository,
                                   StudentRepository studentRepository,
-                                  AttachmentRepository attachmentRepository,
-                                  CurrentAddressRepository currentAddressRepository,
-                                  ScholarshipRepository scholarshipRepository){
+                                  AttachmentService attachmentService,
+                                  ListOfGradesService listOfGradesService){
         this.archivedStudentRepository = archivedStudentRepository;
-        this.attachmentRepository = attachmentRepository;
         this.studentRepository = studentRepository;
-        this.currentAddressRepository = currentAddressRepository;
-        this.scholarshipRepository = scholarshipRepository;
+        this.attachmentService = attachmentService;
+        this.listOfGradesService = listOfGradesService;
     }
 
     public List<ArchivedStudent> listAll(String keyword) {
@@ -79,11 +74,13 @@ public class ArchivedStudentService {
         archivedStudent.setYearOfStarting(student.getScholarship().getDateOfGetting().getYear());
         archivedStudentRepository.save(archivedStudent);
 
-        studentRepository.deleteStudentWithoutInformation(studentId);
+        try {
+            attachmentService.saveAttachmentForArchivedStudent(archivedStudent.getId(),
+                    listOfGradesService.generateMultipartFileWithGrades(studentId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        attachmentRepository.deleteAllByStudentId(studentId);
-        currentAddressRepository.deleteCurrentAddressByStudentId(studentId);
-        scholarshipRepository.deleteByStudentId(studentId);
-
+        studentRepository.deleteById(studentId);
     }
 }

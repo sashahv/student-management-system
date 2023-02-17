@@ -8,7 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Stypendyści</title>
+    <title>Baza danych DFJP2</title>
 </head>
 <script th:inline="javascript">
 </script>
@@ -132,7 +132,7 @@
     function validateForm() {
         let gradeFields = document.getElementsByClassName("change-semester-input");
         for (let i = 0; i < gradeFields.length; i++) {
-            if (!gradeFields[i].value || gradeFields[i].value.trim() === "" || gradeFields[i].value < 1 || gradeFields[i].value > 5) {
+            if (!gradeFields[i].value || gradeFields[i].value.trim() === "" || isNaN(gradeFields[i].value)  || gradeFields[i].value < 1 || gradeFields[i].value > 5) {
                 gradeFields[i].style.border = "4px solid red";
                 gradeFields[i].scrollIntoView({behavior: "smooth", block: "center"});
                 confirmBlock.style.display = "none";
@@ -150,20 +150,6 @@
             gradeFields[i].style.border = "none"
         }
     }
-
-    //     let fileInputs = document.getElementsByClassName('change-semester-file-input');
-    //     let buttons = document.getElementsByClassName('choose-file-button');
-    //
-    //     for (let i = 0; i < fileInputs.length; i++) {
-    //         fileInputs[i].addEventListener('change', function (){
-    //         if (fileInputs[i].value) {
-    //             buttons[i].style.color = '#51832AFF';
-    //             buttons[i].innerHTML = 'Plik wybrany';
-    //         } else {
-    //             buttons[i].style.color = '#ffffff';
-    //             buttons[i].innerHTML = 'Wybierz plik';
-    //         }
-    // })}
 </script>
 </body>
 </html>

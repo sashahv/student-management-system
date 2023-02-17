@@ -8,7 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Stypendyści</title>
+    <title>Baza danych DFJP2</title>
 </head>
 <script th:inline="javascript">
 </script>
@@ -165,7 +165,7 @@
             successMessage.style.width="0";
             successMessage.style.padding="0";
             successMessage.innerText="";
-            successMessage.style.transition=".3s linear";
+            successMessage.style.transition=".8s linear";
         }, 3000);
     }
 
@@ -185,7 +185,7 @@
     function validateFormOfDecrease(){
         let newAmountOfDecrease = document.getElementById("newAmountOfDecrease");
         let errorMessage = document.getElementById("error-scholarship");
-        if (!newAmountOfDecrease.value || newAmountOfDecrease.value < 0 || isNaN(newAmountOfDecrease) || newAmountOfDecrease.value.trim() === "") {
+        if (!newAmountOfDecrease.value || newAmountOfDecrease.value < 0 || isNaN(newAmountOfDecrease.value) || newAmountOfDecrease.value.trim() === "") {
             errorMessage.style.display = "flex";
             return false
         }

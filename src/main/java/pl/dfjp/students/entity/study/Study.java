@@ -46,9 +46,5 @@ public class Study {
 
     @JsonIgnore
     @OneToOne(mappedBy = "study")
-    private Student student;
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "study")
     private ArchivedStudent archivedStudent;
 }

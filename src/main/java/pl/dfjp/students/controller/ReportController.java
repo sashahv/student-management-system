@@ -39,7 +39,7 @@ public class ReportController {
         this.studentRepository = studentRepository;
     }
 
-    @PostMapping("/raport/lista-studentow.pdf")
+    @PostMapping("/raport/lista-stypendystow.pdf")
     public ResponseEntity<InputStreamResource> filterStudentsAndGeneratePdf(@RequestParam(value = "miejsceZam", required = false) PlaceOfLiving placeOfLiving,
                                                                             @RequestParam(value = "plec", required = false) Gender gender,
                                                                             @RequestParam(value = "rodzajSt", required = false) KindOfStudy kindOfStudy,
@@ -84,11 +84,7 @@ public class ReportController {
             students.sort(Comparator.comparing(student -> student.getSurname().toUpperCase(Locale.ROOT)));
         }
 
-        ByteArrayInputStream bis = null;
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename=Lista stypendystów.pdf");
-
-        bis = switch (tableId.intValue()) {
+        ByteArrayInputStream bis = switch (tableId.intValue()) {
             case 1 -> typListy.equals("numerowana")
                     ? reportService.generateEmptyColumnsWithNumerationList(titlesEdited, amountOfColumns, amountOfRows, mainTitle)
                     : reportService.generateEmptyColumnsList(titlesEdited, amountOfColumns, amountOfRows, mainTitle);
@@ -100,8 +96,12 @@ public class ReportController {
             case 7 -> reportService.generateNameSurnamePreviousSemesterAverageGrade(students, amountOfEmptyColumns, amountOfEmptyRows, titles, mainTitle);
             case 8 -> reportService.generateListOfGrades(students, amountOfEmptyColumns, amountOfEmptyRows, titles, mainTitle);
             case 9 -> reportService.generateNameSurnameFieldYearKindOfStudy(students, amountOfEmptyColumns, amountOfEmptyRows, titles, mainTitle);
-            default -> bis;
+            default -> null;
         };
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=lista-stypendystow.pdf");
 
         return ResponseEntity
                 .ok()

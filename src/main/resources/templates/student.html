@@ -8,7 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Stypendyści</title>
+    <title>Baza danych DFJP2</title>
 </head>
 <script th:inline="javascript">
 </script>
@@ -44,30 +44,31 @@
     </div>
 </div>
 <div class="student-control-block">
-    <div id="change-semester-input-avg-grade">
-        <form th:action="@{/stypendysta/zwieksz-semestr(studentId=${student.id})}" onsubmit="" th:method="post">
-            <div class="change-semester-input-avg-grade-content">
-                <div class="change-semester-input-avg-grade-title">
-                    Wprowadź średnią ocenę
-                </div>
-                <div><input type="text" th:name="ocena"></div>
-
-                <button type="submit">Przenieść</button>
-            </div>
-        </form>
-        <div class="change-semester-input-avg-grade-block">
-        </div>
-    </div>
     <div>
         <div class="student-control-block-content">
             <a class="student-controls" th:href="@{/stypendysci/zaswiadczenie(studentId=${student.id})}">Zaświadczenie</a>
             <a class="student-controls" th:href="@{/karty-ocen(studentId=${student.id})}">Karty ocen</a>
             <a class="student-controls" th:href="@{/stypendysci/edytowanie(studentId=${student.id})}">Edytuj</a>
             <a class="student-controls" th:href="@{/stypendysci/archiwizacja(studentId=${student.id})}">Archiwizuj</a>
-            <a class="student-controls" id="student-controls-change-semestr">Zwiększ semestr</a>
+            <button class="student-controls" type="button" id="student-controls-change-semester" onclick="document.getElementById('change-semester-input-avg-grade').style.display='flex'">Zwiększ semestr</button>
         </div>
     </div>
+</div>
 
+<div id="change-semester-input-avg-grade">
+    <form th:action="@{/stypendysta/zwieksz-semestr(studentId=${student.id})}" onsubmit="return validateForm()" th:method="post">
+        <div class="change-semester-input-avg-grade-content">
+            <p id="invalid-name-message">Podaj poprawną ocenę</p>
+            <div class="change-semester-input-avg-grade-title">
+                Wprowadź średnią ocenę
+            </div>
+            <div><input type="text" id="change-semester-input-avg-grade-field" onfocus="closeErrorMessage()" autocomplete="off" th:name="ocena"></div>
+            <div class="change-semester-input-avg-grade-buttons">
+                <button type="submit">Przenieść</button>
+                <button type="button" onclick="document.getElementById('change-semester-input-avg-grade').style.display='none'">Anulować</button>
+            </div>
+        </div>
+    </form>
 </div>
 <section class="info">
     <div class="wrapper">
@@ -89,7 +90,7 @@
                         <p class="info-block-item">Data urodzenia: <span class="info-block-item-value"
                                                                          th:text="*{#temporals.format(birthDate, 'dd MMMM yyyy', new java.util.Locale('pl', 'PL'))}"></span>
                         </p>
-                        <p class="info-block-item">Płeć: <span class="info-block-item-value" th:text="*{gender}"></span>
+                        <p class="info-block-item">Płeć: <span class="info-block-item-value" th:text="*{gender.name}"></span>
                         </p>
                         <p class="info-block-item">Kraj urodzenia: <span class="info-block-item-value"
                                                                          th:text="*{countryOfBirth?.name}"></span></p>
@@ -251,36 +252,23 @@
             successMessage.style.width="0";
             successMessage.style.padding="0";
             successMessage.innerText="";
-            successMessage.style.transition=".3s linear";
+            successMessage.style.transition=".8s linear";
         }, 3000);
     }
 
-    let avgGradeSetBlock = document.getElementById("change-semester-input-avg-grade");
-    document.getElementById("student-controls-change-semestr").addEventListener('click', function (event){
-        event.preventDefault();
-        avgGradeSetBlock.style.display="flex";
-    });
-
     function validateForm() {
-        let gradeFields = document.getElementsByClassName("change-semester-input");
-        for (let i = 0; i < gradeFields.length; i++) {
-            if (!gradeFields[i].value || gradeFields[i].value.trim() === "" || gradeFields[i].value < 1 || gradeFields[i].value > 5) {
-                gradeFields[i].style.border = "4px solid red";
-                gradeFields[i].scrollIntoView({behavior: "smooth", block: "center"});
-                confirmBlock.style.display = "none";
+        let gradeField = document.getElementById("change-semester-input-avg-grade-field");
+            if (!gradeField.value || gradeField.value.trim() === "" || isNaN(gradeField.value) || gradeField.value < 1 || gradeField.value > 5) {
+                gradeField.style.border = "4px solid red";
                 return false
-            }
         }
-
-        gradeFields.style.border = "none";
+        gradeField.style.border = "none";
         return true;
     }
 
     function closeErrorMessage() {
-        let gradeFields = document.getElementsByClassName("change-semester-input");
-        for (let i = 0; i < gradeFields.length; i++) {
-            gradeFields[i].style.border = "none"
-        }
+        let gradeField = document.getElementById("change-semester-input-avg-grade-field");
+            gradeField.style.border = "none"
     }
 </script>
 </body>

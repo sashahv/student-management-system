@@ -71,4 +71,8 @@ public class Student {
     private Scholarship scholarship;
 
     private String additionalInformation;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "student")
+    List<Attachment> attachments;
 }

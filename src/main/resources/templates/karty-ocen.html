@@ -8,7 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Stypendyści</title>
+    <title>Baza danych DFJP2</title>
 </head>
 <script th:inline="javascript">
 </script>
@@ -45,6 +45,11 @@
 </div>
 <div id="files-block">
     <div class="wrapper">
+        <div class="all-grades" th:if="${countAttachments>0}">
+            <a th:href="@{/karty-ocen/ogolna-karta(studentId=${student.id})}">
+                <button>Zobacz ogólną kartę ocen</button>
+            </a>
+        </div>
         <div class="files-block-content">
             <div class="file-send-field">
                 <form th:action="@{/karty-ocen/przeslanie}" onsubmit="return validateSemester()"
@@ -60,7 +65,7 @@
                         <button type="submit">Dodaj</button>
                 </form>
             </div>
-            <table class="table table-dark table-bordered table-hover grades-table files-table">
+            <table class="table table-dark table-bordered table-hover grades-table files-table" th:if="${countAttachments>0}">
                 <thead>
                 <tr>
                     <th class="col-3">Semestr</th>

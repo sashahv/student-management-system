@@ -81,7 +81,7 @@ public class AdministrationController {
         return "zarzadzanie-wydzialami";
     }
 
-    @GetMapping("/wydzialy/dodawanie")
+    @PostMapping("/wydzialy/dodawanie")
     private String addNewFaculty(@RequestParam("nazwa") String name,
                                  RedirectAttributes redirectAttributes) {
         studyService.addNewFaculty(name);
@@ -89,7 +89,7 @@ public class AdministrationController {
         return "redirect:/panel-administracyjny/wydzialy";
     }
 
-    @DeleteMapping("/wydzialy/usuwanie")
+    @GetMapping("/wydzialy/usuwanie")
     private String deleteFaculty(@RequestParam("id") Long id,
                                  RedirectAttributes redirectAttributes) {
         studyService.deleteFaculty(id);

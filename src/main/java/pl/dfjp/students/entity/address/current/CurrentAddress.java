@@ -1,5 +1,6 @@
 package pl.dfjp.students.entity.address.current;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -37,7 +38,9 @@ public class CurrentAddress {
     @JoinColumn(name = "place_of_living_id", referencedColumnName = "id")
     private PlaceOfLiving placeOfLiving;
 
-    @OneToOne
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Student student;
 }

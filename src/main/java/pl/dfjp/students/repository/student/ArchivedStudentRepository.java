@@ -36,9 +36,8 @@ public interface ArchivedStudentRepository extends JpaRepository<ArchivedStudent
             "FROM ArchivedStudent s")
     List<Integer> listAllYears();
 
-    @Modifying
-    @Query(value = "DELETE FROM archived_student s WHERE id=?1 ", nativeQuery = true)
-    void deleteArchivedStudentWithoutInformation(Long studentId);
-
     List<ArchivedStudent> findByCountryOfBirthId(Long id);
+
+    @Query(value = "SELECT max(a.id) FROM archived_student a", nativeQuery = true)
+    Long findLastIndex();
 }

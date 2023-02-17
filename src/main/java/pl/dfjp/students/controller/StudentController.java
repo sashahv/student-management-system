@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import pl.dfjp.students.entity.student.ArchivedStudent;
 import pl.dfjp.students.entity.student.Gender;
 import pl.dfjp.students.entity.student.Student;
 import pl.dfjp.students.entity.study.AverageGradeByAcademicYear;
@@ -16,13 +17,16 @@ import pl.dfjp.students.entity.study.AverageGradeBySemester;
 import pl.dfjp.students.exception.StudentNotFoundException;
 import pl.dfjp.students.repository.address.CountryRepository;
 import pl.dfjp.students.repository.address.current.PlaceOfLivingRepository;
+import pl.dfjp.students.repository.student.ArchivedStudentRepository;
 import pl.dfjp.students.repository.student.StudentRepository;
 import pl.dfjp.students.repository.study.*;
 import pl.dfjp.students.service.ArchivedStudentService;
+import pl.dfjp.students.service.StudentService;
 import pl.dfjp.students.service.ViewService;
 import pl.dfjp.students.service.study.AverageGradeService;
-import pl.dfjp.students.service.StudentService;
-import java.util.*;
+
+import java.util.Comparator;
+import java.util.List;
 
 
 @Controller
@@ -41,6 +45,7 @@ public class StudentController {
     private final PlaceOfLivingRepository placeOfLivingRepository;
     private final AverageGradeBySemesterRepository averageGradeBySemesterRepository;
     private final AverageGradeByAcademicYearRepository averageGradeByAcademicYearRepository;
+    private final ArchivedStudentRepository archivedStudentRepository;
 
     @Autowired
     public StudentController(StudentService studentService,
@@ -55,7 +60,8 @@ public class StudentController {
                              ViewService viewService,
                              PlaceOfLivingRepository placeOfLivingRepository,
                              AverageGradeBySemesterRepository averageGradeBySemesterRepository,
-                             AverageGradeByAcademicYearRepository averageGradeByAcademicYearRepository) {
+                             AverageGradeByAcademicYearRepository averageGradeByAcademicYearRepository,
+                             ArchivedStudentRepository archivedStudentRepository) {
         this.studentService = studentService;
         this.studentRepository = studentRepository;
         this.averageGradeService = averageGradeService;
@@ -69,10 +75,11 @@ public class StudentController {
         this.placeOfLivingRepository = placeOfLivingRepository;
         this.averageGradeBySemesterRepository = averageGradeBySemesterRepository;
         this.averageGradeByAcademicYearRepository = averageGradeByAcademicYearRepository;
+        this.archivedStudentRepository = archivedStudentRepository;
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<?> fetchStudentById(@PathVariable("id") Long id){
+    private ResponseEntity<?> fetchStudentById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(studentService.fetchStudentById(id));
     }
 
@@ -82,7 +89,7 @@ public class StudentController {
         return "student";
     }
 
-    @RequestMapping(value = "/stypendysci", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/stypendysci", method = {RequestMethod.GET, RequestMethod.POST})
     private String showStudentsPage(Model model,
                                     String str,
                                     String poleSort,
@@ -109,8 +116,8 @@ public class StudentController {
     private String addStudent(@Valid @ModelAttribute Student student,
                               BindingResult result,
                               RedirectAttributes redirectAttributes,
-                              Model model){
-        if(result.hasErrors()){
+                              Model model) {
+        if (result.hasErrors()) {
             model.addAttribute("student", student);
             model.addAttribute("genders", List.of(Gender.values()));
             model.addAttribute("placesOfLiving", placeOfLivingRepository.findAll());
@@ -122,7 +129,7 @@ public class StudentController {
             return "dodawanie-stypendysty";
         }
 
-        redirectAttributes.addFlashAttribute("message", "Student został dodany");
+        redirectAttributes.addFlashAttribute("message", "Student pomyślnie dodany");
         studentService.addStudent(student);
         return "redirect:/dodawanie-stypendysty";
     }
@@ -140,8 +147,8 @@ public class StudentController {
                                  @RequestParam Long id,
                                  BindingResult result,
                                  RedirectAttributes redirectAttributes,
-                                 Model model){
-        if(result.hasErrors()){
+                                 Model model) {
+        if (result.hasErrors()) {
             Long studyId = student != null ? student.getStudy().getId() : null;
             int customDecreasingAmount = student != null ? student.getScholarship().getCustomDecreasingAmount() : 0;
             List<AverageGradeBySemester> avgGrades = averageGradeBySemesterRepository.findByStudyId(studyId);
@@ -168,7 +175,7 @@ public class StudentController {
 
     @GetMapping("/stypendysci/archiwizacja")
     private String archiveStudent(@RequestParam("studentId") Long id,
-                                  RedirectAttributes redirectAttributes){
+                                  RedirectAttributes redirectAttributes) {
         Student student = studentRepository.findById(id).orElseThrow(
                 () -> new StudentNotFoundException("Student with id " + id + " doesn't exist")
         );
@@ -180,8 +187,18 @@ public class StudentController {
 
     @PostMapping("/stypendysta/zwieksz-semestr")
     private String generateAverageGradeForActualSemester(@RequestParam Long studentId,
-                                                         @RequestParam("ocena") double grade){
+                                                         @RequestParam("ocena") double grade,
+                                                         RedirectAttributes redirectAttributes) {
+        Student student = studentRepository.findById(studentId).orElseThrow(
+                () -> new StudentNotFoundException("Student with id " + studentId + " doesn't exist")
+        );
+        if (student.getStudy().getActualSemester() == 10) {
+            redirectAttributes.addFlashAttribute("message", "Semestr pomyślnie zwiększony\nStudent dodany do archiwum");
+            averageGradeService.generateAverageGradeForActualSemester(studentId, grade);
+            return "redirect:/archiwum/stypendysta?id=" + archivedStudentRepository.findLastIndex();
+        }
         averageGradeService.generateAverageGradeForActualSemester(studentId, grade);
+        redirectAttributes.addFlashAttribute("message", "Semestr pomyślnie zwiększony");
         return "redirect:/stypendysci/stypendysta?id=" + studentId;
     }
 }

@@ -1142,7 +1142,7 @@ public class ReportService {
         return pdfPTable;
     }
 
-    private PdfPTable configurePdfPTable(int amountOfColumns, Integer amountOfAdditionalEmptyColumns) {
+    private PdfPTable configurePdfPTable(int amountOfColumns, Integer amountOfAdditionalEmptyColumns) throws DocumentException {
         PdfPTable pdfPTable = new PdfPTable(amountOfColumns + amountOfAdditionalEmptyColumns);
         pdfPTable.setWidthPercentage(100);
         float totalWidth = 1; // Total width of the table

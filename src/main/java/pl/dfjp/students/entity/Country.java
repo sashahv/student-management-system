@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import pl.dfjp.students.entity.address.current.CurrentAddress;
 import pl.dfjp.students.entity.address.permanent.PermanentAddress;
 import pl.dfjp.students.entity.student.ArchivedStudent;
@@ -22,21 +24,4 @@ public class Country {
     private Long id;
     @NotBlank(message = "Nazwa państwa nie może być pusty")
     private String name;
-
-    @Transient
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "country")
-    List<PermanentAddress> permanentAddresses;
-
-    @Transient
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "country")
-    List<CurrentAddress> currentAddresses;
-
-    @Transient
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryOfBirth")
-    List<ArchivedStudent> archivedStudents;
-
-    @Transient
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryOfBirth")
-    List<Student> students;
 }
