@@ -1,6 +1,5 @@
 package pl.dfjp.students.service;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,8 @@ import pl.dfjp.students.entity.student.Student;
 import pl.dfjp.students.exception.StudentNotFoundException;
 import pl.dfjp.students.repository.student.ArchivedStudentRepository;
 import pl.dfjp.students.repository.student.StudentRepository;
+import pl.dfjp.students.repository.study.AverageGradeByAcademicYearRepository;
+import pl.dfjp.students.repository.study.AverageGradeBySemesterRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,16 +23,22 @@ public class ArchivedStudentService {
     private final StudentRepository studentRepository;
     private final AttachmentService attachmentService;
     private final ListOfGradesService listOfGradesService;
+    private final AverageGradeBySemesterRepository averageGradeBySemesterRepository;
+    private final AverageGradeByAcademicYearRepository averageGradeByAcademicYearRepository;
 
     @Autowired
     public ArchivedStudentService(ArchivedStudentRepository archivedStudentRepository,
                                   StudentRepository studentRepository,
                                   AttachmentService attachmentService,
-                                  ListOfGradesService listOfGradesService){
+                                  ListOfGradesService listOfGradesService,
+                                  AverageGradeBySemesterRepository averageGradeBySemesterRepository,
+                                  AverageGradeByAcademicYearRepository averageGradeByAcademicYearRepository){
         this.archivedStudentRepository = archivedStudentRepository;
         this.studentRepository = studentRepository;
         this.attachmentService = attachmentService;
         this.listOfGradesService = listOfGradesService;
+        this.averageGradeBySemesterRepository = averageGradeBySemesterRepository;
+        this.averageGradeByAcademicYearRepository = averageGradeByAcademicYearRepository;
     }
 
     public List<ArchivedStudent> listAll(String keyword) {
@@ -80,6 +87,9 @@ public class ArchivedStudentService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        averageGradeBySemesterRepository.deleteByStudyId(student.getStudy().getId());
+        averageGradeByAcademicYearRepository.deleteByStudyId(student.getStudy().getId());
 
         studentRepository.deleteById(studentId);
     }

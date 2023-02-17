@@ -22,5 +22,13 @@ public class TypeOfStudy {  // TYP STUDIÓW
 
     @Transient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeOfStudy")
+    private List<AverageGradeBySemester> averageGradeBySemesters;
+
+    @Transient
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeOfStudy")
+    private List<AverageGradeByAcademicYear> averageGradeByAcademicYears;
+
+    @Transient
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeOfStudy")
     private List<Study> studies;
 }

@@ -27,7 +27,7 @@ public class PermanentAddress {
             message = "Nieprawidłowy format | Przykłady prawidłowego formatu: 12-345, 12345, 12 345")
     private String zipCode;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     private Country country;
 

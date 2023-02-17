@@ -44,14 +44,14 @@ public class Student {
     private LocalDate birthDate;
     private String placeOfBirth;
     @NotNull(message = "Kraj urodzenia nie może być pusty")
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "country_of_birth_id", referencedColumnName = "id")
     private Country countryOfBirth;
     private String citizenship;
     private String nationality;
 
     @Valid
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "permanent_address_id", referencedColumnName = "id")
     private PermanentAddress permanentAddress;
 
@@ -61,7 +61,7 @@ public class Student {
     private CurrentAddress currentAddress;
 
     @Valid
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "study_id", referencedColumnName = "id")
     private Study study;
 
@@ -74,5 +74,5 @@ public class Student {
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "student")
-    List<Attachment> attachments;
+    private List<Attachment> attachments;
 }

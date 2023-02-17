@@ -193,12 +193,13 @@ public class StudentController {
                 () -> new StudentNotFoundException("Student with id " + studentId + " doesn't exist")
         );
         if (student.getStudy().getActualSemester() == 10) {
-            redirectAttributes.addFlashAttribute("message", "Semestr pomyślnie zwiększony\nStudent dodany do archiwum");
             averageGradeService.generateAverageGradeForActualSemester(studentId, grade);
+            redirectAttributes.addFlashAttribute("message", "Semestr pomyślnie zwiększony\nStudent dodany do archiwum");
             return "redirect:/archiwum/stypendysta?id=" + archivedStudentRepository.findLastIndex();
+        } else {
+            averageGradeService.generateAverageGradeForActualSemester(studentId, grade);
+            redirectAttributes.addFlashAttribute("message", "Semestr pomyślnie zwiększony");
+            return "redirect:/stypendysci/stypendysta?id=" + studentId;
         }
-        averageGradeService.generateAverageGradeForActualSemester(studentId, grade);
-        redirectAttributes.addFlashAttribute("message", "Semestr pomyślnie zwiększony");
-        return "redirect:/stypendysci/stypendysta?id=" + studentId;
     }
 }

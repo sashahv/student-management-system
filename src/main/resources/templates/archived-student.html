@@ -122,65 +122,11 @@
                                                                       th:text="*{typeOfStudy?.name}"></span></p>
                     </div>
                 </div>
-                <div class="all-grades">
-                    <a th:href="@{/karty-ocen/karta?id=b04fd06c-f5d6-45fe-9d0a-ac86761d714b}">
+                <div class="all-grades" th:if="${attachment!=null}">
+                    <a th:href="@{/karty-ocen/karta(id=${attachment?.id})}">
                         <button>Zobacz ogólną kartę ocen</button>
                     </a>
                 </div>
-            </div>
-        </div>
-        <div class="info-block-content-wide" id="study-history" th:if="${countAvgGrades>0}">
-            <div class="grades-table-title">Historia studiów</div>
-            <div class="grades-tables-item grades-block">
-                <div class="grades-table-subtitle">Semestralne oceny</div>
-                <table class="table table-dark table-bordered table-hover grades-table" th:if="${countAvgGrades>0}">
-                    <thead>
-                    <tr>
-                        <th class="col-3">Wydział</th>
-                        <th class="col-3">Kierunek</th>
-                        <th class="col-2">Rodzaj studiów</th>
-                        <th class="col-2">Typ studiów</th>
-                        <th class="col-1">Semester</th>
-                        <th class="col-1">Ocena</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="grade : ${averageGrades}">
-                        <td th:text="${grade.faculty}" class="col-3"></td>
-                        <td th:text="${grade.fieldOfStudy}" class="col-3"></td>
-                        <td th:text="${grade.kindOfStudy}" class="col-2"></td>
-                        <td th:text="${grade.typeOfStudy}" class="col-2"></td>
-                        <td th:text="${grade.semester}" class="col-1"></td>
-                        <td th:text="${grade.averageGrade}" class="col-1"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="grades-tables-item grades-block">
-                <div class="grades-table-subtitle">Roczne oceny</div>
-                <table class="table table-dark table-bordered table-hover grades-table" th:if="${countAvgGradesByYear>0}">
-                    <thead>
-                    <tr>
-                        <th class="col-3">Wydział</th>
-                        <th class="col-3">Kierunek</th>
-                        <th class="col-2">Rodzaj studiów</th>
-                        <th class="col-2">Typ studiów</th>
-                        <th class="col-1">Rok</th>
-                        <th class="col-1">Ocena</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="grade : ${averageGradesByYear}">
-                        <td th:text="${grade.faculty}" class=" col-3"></td>
-                        <td th:text="${grade.fieldOfStudy}" class="col-3"></td>
-                        <td th:text="${grade.kindOfStudy}" class="col-2"></td>
-                        <td th:text="${grade.typeOfStudy}" class="col-2"></td>
-                        <td th:text="${grade.academicYear}" class="col-1"></td>
-                        <td th:text="${grade.averageGrade}" class="col-1"></td>
-                    </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>

@@ -26,7 +26,7 @@ public class ArchivedStudent {
     private String phoneNumber;
     private LocalDate birthDate;
     private String placeOfBirth;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "country_of_birth_id", referencedColumnName = "id")
     private Country countryOfBirth;
     private String citizenship;

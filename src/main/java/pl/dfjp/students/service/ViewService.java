@@ -170,6 +170,7 @@ public class ViewService {
                 () -> new StudentNotFoundException("Student with id " + studentId + " doesn't exist")
         );
         List<Attachment> attachments = attachmentRepository.findAllByStudentId(studentId);
+        attachments.sort(Comparator.comparing(Attachment::getFileName));
         long countAttachments = attachments.size();
         model.addAttribute("attachments", attachments);
         model.addAttribute("student", student);
@@ -217,22 +218,11 @@ public class ViewService {
         ArchivedStudent student = archivedStudentRepository.findById(studentId).orElseThrow(
                 () -> new StudentNotFoundException("Student with id " + studentId + " doesn't exist in archive")
         );
-        Long studyId = student.getStudy().getId();
-        List<AverageGradeBySemester> avgGrades = averageGradeBySemesterRepository.findByStudyId(studyId);
-        avgGrades.sort(Comparator.comparing(AverageGradeBySemester::getSemester).reversed());
-        List<AverageGradeByAcademicYear> avgGradesByYear = averageGradeByAcademicYearRepository.findAllByStudyId(studyId);
-        avgGradesByYear.sort(Comparator.comparing(AverageGradeByAcademicYear::getAcademicYear).reversed());
         Attachment attachment = attachmentRepository.findByArchivedStudentId(studentId);
-        long countAvgGradesByYear = avgGradesByYear.size();
-        long countAvgGrades = avgGrades.size();
         LocalDate now = LocalDate.now(ZoneId.of("Europe/Warsaw"));
 
         model.addAttribute("student", student);
         model.addAttribute("now", now);
-        model.addAttribute("countAvgGradesByYear", countAvgGradesByYear);
-        model.addAttribute("countAvgGrades", countAvgGrades);
-        model.addAttribute("averageGrades", avgGrades);
-        model.addAttribute("averageGradesByYear", avgGradesByYear);
         model.addAttribute("attachment", attachment);
         studyService.addStudyObjects(model);
     }

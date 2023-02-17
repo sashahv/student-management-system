@@ -75,10 +75,10 @@ public class AverageGradeService {
         AverageGradeBySemester averageGradeBySemester = new AverageGradeBySemester();
         averageGradeBySemester.setAverageGrade(roundGrade);
         averageGradeBySemester.setSemester(study.getActualSemester()); // 1
-        averageGradeBySemester.setFaculty(study.getFaculty().getName());
-        averageGradeBySemester.setFieldOfStudy(study.getFieldOfStudy().getName());
-        averageGradeBySemester.setKindOfStudy(study.getKindOfStudy().getName());
-        averageGradeBySemester.setTypeOfStudy(study.getTypeOfStudy().getName());
+        averageGradeBySemester.setFaculty(study.getFaculty());
+        averageGradeBySemester.setFieldOfStudy(study.getFieldOfStudy());
+        averageGradeBySemester.setKindOfStudy(study.getKindOfStudy());
+        averageGradeBySemester.setTypeOfStudy(study.getTypeOfStudy());
         averageGradeBySemester.setStudy(study);
         averageGradeBySemesterRepository.save(averageGradeBySemester);
         return averageGradeBySemester;
@@ -182,19 +182,19 @@ public class AverageGradeService {
             if (avgByYear != null) {
                 avgByYear.setFaculty(
                         avgByYear.getFaculty().equals(study.getFaculty().getName())
-                                ? study.getFaculty().getName()
+                                ? study.getFaculty()
                                 : avgByYear.getFaculty());
                 avgByYear.setFieldOfStudy(
                         avgByYear.getFaculty().equals(study.getFieldOfStudy().getName())
-                                ? study.getFieldOfStudy().getName()
+                                ? study.getFieldOfStudy()
                                 : avgByYear.getFieldOfStudy());
                 avgByYear.setKindOfStudy(
                         avgByYear.getFaculty().equals(study.getKindOfStudy().getName())
-                                ? study.getKindOfStudy().getName()
+                                ? study.getKindOfStudy()
                                 : avgByYear.getKindOfStudy());
                 avgByYear.setTypeOfStudy(
                         avgByYear.getFaculty().equals(study.getTypeOfStudy().getName())
-                                ? study.getTypeOfStudy().getName()
+                                ? study.getTypeOfStudy()
                                 : avgByYear.getTypeOfStudy());
                 if (prevSem != null) {
                     avgByYear.setAverageGrade(calculateAverageGradeForActualYear

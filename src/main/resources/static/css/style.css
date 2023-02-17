@@ -1641,16 +1641,23 @@ tr .info-block-item-value {
     color: #FFFFFF;
 }
 
+.document-language.pl {
+    position: relative;
+    z-index: 200;
+}
+
 .document-language.eng {
     margin-top: 150px;
+    position: relative;
+    z-index: -1;
 }
 
 .document-text {
     font-family: "Times New Roman", serif;
-    margin-top: -220px;
+    margin-top: -275px;
     background: none;
     width: 620px;
-    height: 700px;
+    height: 750px;
     text-align: justify;
     letter-spacing: 0.3px;
     font-size: 17px;

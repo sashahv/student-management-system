@@ -20,4 +20,6 @@ public interface AverageGradeBySemesterRepository extends JpaRepository<AverageG
     List<AverageGradeBySemester> findByStudyId(Long studyId);
 
     Optional<AverageGradeBySemester> findBySemesterAndStudyId(int semester, Long studyId);
+
+    void deleteByStudyId(Long id);
 }

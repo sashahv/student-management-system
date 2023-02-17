@@ -22,5 +22,13 @@ public class FieldOfStudy {  // KIERUNEK
 
     @Transient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fieldOfStudy")
+    private List<AverageGradeBySemester> averageGradeBySemesters;
+
+    @Transient
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fieldOfStudy")
+    private List<AverageGradeByAcademicYear> averageGradeByAcademicYears;
+
+    @Transient
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fieldOfStudy")
     private List<Study> studies;
 }

@@ -208,10 +208,10 @@
                     </thead>
                     <tbody>
                     <tr th:each="grade : ${averageGrades}">
-                        <td th:text="${grade.faculty}" class="col-3"></td>
-                        <td th:text="${grade.fieldOfStudy}" class="col-3"></td>
-                        <td th:text="${grade.kindOfStudy}" class="col-2"></td>
-                        <td th:text="${grade.typeOfStudy}" class="col-2"></td>
+                        <td th:text="${grade.faculty.name}" class="col-3"></td>
+                        <td th:text="${grade.fieldOfStudy.name}" class="col-3"></td>
+                        <td th:text="${grade.kindOfStudy.name}" class="col-2"></td>
+                        <td th:text="${grade.typeOfStudy.name}" class="col-2"></td>
                         <td><input autocomplete="off" class="info-block-item-value disabled" th:name="semestr" th:value="${grade.semester}" disabled></td>
                         <td><input autocomplete="off" class="info-block-item-value" th:name="ocena" th:value="${grade.averageGrade}" th:placeholder="'[!] ' + ${grade.averageGrade} + ' [!]'"></td>
                     </tr>

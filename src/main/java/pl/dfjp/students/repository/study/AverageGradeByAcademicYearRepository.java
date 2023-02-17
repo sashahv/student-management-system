@@ -21,4 +21,6 @@ public interface AverageGradeByAcademicYearRepository extends JpaRepository<Aver
     AverageGradeByAcademicYear findTopByStudyId(Long studyId);
 
     double findByAcademicYear(int year);
+
+    void deleteByStudyId(Long studentId);
 }

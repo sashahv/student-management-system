@@ -2,6 +2,8 @@ package pl.dfjp.students.entity.student;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -11,6 +13,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Attachment {
     @Id
     @GeneratedValue(generator = "uuid")
@@ -25,10 +29,12 @@ public class Attachment {
     private byte[] data;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student student;
 
     @JsonIgnore
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "archived_student_id", referencedColumnName = "id")
     private ArchivedStudent archivedStudent;
 }

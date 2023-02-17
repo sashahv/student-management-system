@@ -46,8 +46,10 @@
 <section class="document">
   <div class="wrapper">
     <p class="document-language pl">W języku polskim</p>
-    <form class="document-block english" th:action="@{/stypendysci/zaswiadczenia/zaswiadczenie.pdf(studentId=${student.id})}" th:object="${student}" method="post">
+    <form class="document-block polish" th:action="@{/stypendysci/zaswiadczenia/zaswiadczenie.pdf(studentId=${student.id})}" th:object="${student}" method="post">
       <textarea class="document-text" th:name="zaswiadczenie" th:text="'
+
+
 
 
 
@@ -76,7 +78,9 @@
     </form>
     <p class="document-language eng">W języku angielskim</p>
     <form class="document-block" th:action="@{/stypendysci/zaswiadczenia/zaswiadczenie.pdf(studentId=${student.id})}" th:object="${student}" method="post">
-      <textarea class="document-text polish" th:name="zaswiadczenie" th:text="'
+      <textarea class="document-text english" th:name="zaswiadczenie" th:text="'
+
+
 
 
 

@@ -22,5 +22,13 @@ public class Faculty { // WYDZIAł
 
     @Transient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "faculty")
+    private List<AverageGradeBySemester> averageGradeBySemesters;
+
+    @Transient
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "faculty")
+    private List<AverageGradeByAcademicYear> averageGradeByAcademicYears;
+
+    @Transient
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "faculty")
     private List<Study> studies;
 }

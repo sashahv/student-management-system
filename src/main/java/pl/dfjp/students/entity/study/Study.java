@@ -8,6 +8,8 @@ import lombok.*;
 import pl.dfjp.students.entity.student.ArchivedStudent;
 import pl.dfjp.students.entity.student.Student;
 
+import java.util.List;
+
 
 @Entity
 @AllArgsConstructor
