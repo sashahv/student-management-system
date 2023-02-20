@@ -21,7 +21,6 @@ The system is designed for use by a single administrator, who must be authorized
 - Maven
 - Hibernate
 - JUnit
-- Jakarta Servlet API
 - Thymeleaf
 - Javascript
 
