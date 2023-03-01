@@ -547,7 +547,7 @@ public class ReportService {
             cell = new PdfPCell(new Phrase("Płeć", fontTitle));
             configureCell(pdfPTable, cell);
 
-            cell = new PdfPCell(new Phrase("Data rozpoczęcia", fontTitle));
+            cell = new PdfPCell(new Phrase("Rok rozpoczęcia", fontTitle));
             configureCell(pdfPTable, cell);
 
             cell = new PdfPCell(new Phrase("Miasto", fontTitle));
@@ -592,10 +592,7 @@ public class ReportService {
                 cell = new PdfPCell(new Phrase(student.getGender()!=null ? student.getGender().getName() : " ", fontContent));
                 configureCell(pdfPTable, cell);
 
-                LocalDate localDate = student.getScholarship().getDateOfGetting();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", new Locale("pl", "PL"));
-                String formattedDate = localDate.format(formatter);
-                cell = new PdfPCell(new Phrase(formattedDate, fontContent));
+                cell = new PdfPCell(new Phrase(String.valueOf(student.getStudy()!=null ? student.getStudy().getFromYear() : " "), fontContent));
                 configureCell(pdfPTable, cell);
 
                 cell = new PdfPCell(new Phrase(student.getCurrentAddress()!=null ? student.getCurrentAddress().getCity() : " ", fontContent));
@@ -644,7 +641,7 @@ public class ReportService {
             PdfWriter.getInstance(document, byteArrayOutputStream);
             document.open();
 
-            PdfPTable pdfPTable = configurePdfPTable(4, amountOfEmptyColumns);
+            PdfPTable pdfPTable = configurePdfPTableForScholarshipTable(4, amountOfEmptyColumns);
 
             BaseFont bfTimes = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1257, false);
 
@@ -671,7 +668,7 @@ public class ReportService {
             cell = new PdfPCell(new Phrase("Imię", fontTitle));
             configureCell(pdfPTable, cell);
 
-            cell = new PdfPCell(new Phrase("Wysokość stypendium", fontTitle));
+            cell = new PdfPCell(new Phrase("Kwota", fontTitle));
             configureCell(pdfPTable, cell);
 
             if (titles.isEmpty()) {
@@ -1153,6 +1150,29 @@ public class ReportService {
 
         columnWidths[0] = firstCellWidth;
         for (int i = 1; i < numberOfColumns; i++) {
+            columnWidths[i] = remainingCellWidth;
+        }
+
+        pdfPTable.setWidths(columnWidths);
+        return pdfPTable;
+    }
+
+    private PdfPTable configurePdfPTableForScholarshipTable(int amountOfColumns, Integer amountOfAdditionalEmptyColumns) throws DocumentException {
+        PdfPTable pdfPTable = new PdfPTable(amountOfColumns + amountOfAdditionalEmptyColumns);
+        pdfPTable.setWidthPercentage(100);
+        float totalWidth = 1; // Total width of the table
+        int numberOfColumns = amountOfColumns + amountOfAdditionalEmptyColumns; // Number of columns in the table
+        float firstCellWidth = totalWidth * 0.06f;
+        float scholarshipCellWidth = totalWidth * 0.09f;
+        float remainingCellWidth = (totalWidth - firstCellWidth) / (numberOfColumns - 1);
+        float[] columnWidths = new float[numberOfColumns];
+
+        columnWidths[0] = firstCellWidth;
+        for (int i = 1; i < numberOfColumns; i++) {
+            if(i==3) {
+                columnWidths[i] = scholarshipCellWidth;
+                continue;
+            }
             columnWidths[i] = remainingCellWidth;
         }
 

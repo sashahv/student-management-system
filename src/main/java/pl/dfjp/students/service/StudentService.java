@@ -12,6 +12,8 @@ import pl.dfjp.students.service.study.AverageGradeService;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -71,17 +73,23 @@ public class StudentService {
     private void saveStudent(Student givenStudent,
                              Student requiredStudent,
                              HashMap<Integer, Double> mapping) {
+        if(requiredStudent.getSID()==null){
+            requiredStudent.setSID(UUID.randomUUID().toString().replace("-", ""));
+        }
         requiredStudent.setName(givenStudent.getName());
         requiredStudent.setSurname(givenStudent.getSurname());
         requiredStudent.setFatherName(givenStudent.getFatherName());
         requiredStudent.setGender(givenStudent.getGender());
         requiredStudent.setPassportNumber(givenStudent.getPassportNumber());
-        requiredStudent.setPhoneNumber(generatorService.generatePhoneNumber(givenStudent.getPhoneNumber()));
+        requiredStudent.setPhoneNumber(givenStudent.getPhoneNumber());
+//        requiredStudent.setPhoneNumber(generatorService.generatePhoneNumber(givenStudent.getPhoneNumber()));
         requiredStudent.setBirthDate(givenStudent.getBirthDate());
         requiredStudent.setPlaceOfBirth(givenStudent.getPlaceOfBirth());
         requiredStudent.setCountryOfBirth(givenStudent.getCountryOfBirth());
-        requiredStudent.setCitizenship(givenStudent.getCitizenship());
-        requiredStudent.setNationality(givenStudent.getNationality());
+        String citizenship = givenStudent.getCitizenship();
+        requiredStudent.setCitizenship(citizenship.length()>=3 ? citizenship.substring(0,3).toUpperCase() : citizenship);
+        String nationality = givenStudent.getNationality();
+        requiredStudent.setNationality(nationality.length()>=3 ? nationality.substring(0,3).toUpperCase() : nationality);
         requiredStudent.setAdditionalInformation(givenStudent.getAdditionalInformation());
         studentRepository.save(requiredStudent);
         requiredStudent.setPermanentAddress(

@@ -181,19 +181,19 @@ public class AverageGradeService {
 
             if (avgByYear != null) {
                 avgByYear.setFaculty(
-                        avgByYear.getFaculty().equals(study.getFaculty().getName())
+                        avgByYear.getFaculty().getName().equals(study.getFaculty().getName())
                                 ? study.getFaculty()
                                 : avgByYear.getFaculty());
                 avgByYear.setFieldOfStudy(
-                        avgByYear.getFaculty().equals(study.getFieldOfStudy().getName())
+                        avgByYear.getFaculty().getName().equals(study.getFieldOfStudy().getName())
                                 ? study.getFieldOfStudy()
                                 : avgByYear.getFieldOfStudy());
                 avgByYear.setKindOfStudy(
-                        avgByYear.getFaculty().equals(study.getKindOfStudy().getName())
+                        avgByYear.getFaculty().getName().equals(study.getKindOfStudy().getName())
                                 ? study.getKindOfStudy()
                                 : avgByYear.getKindOfStudy());
                 avgByYear.setTypeOfStudy(
-                        avgByYear.getFaculty().equals(study.getTypeOfStudy().getName())
+                        avgByYear.getFaculty().getName().equals(study.getTypeOfStudy().getName())
                                 ? study.getTypeOfStudy()
                                 : avgByYear.getTypeOfStudy());
                 if (prevSem != null) {

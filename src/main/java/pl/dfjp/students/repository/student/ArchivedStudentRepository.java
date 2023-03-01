@@ -11,6 +11,7 @@ import pl.dfjp.students.entity.student.ArchivedStudent;
 import pl.dfjp.students.entity.student.Student;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ArchivedStudentRepository extends JpaRepository<ArchivedStudent, Long> {
@@ -25,19 +26,14 @@ public interface ArchivedStudentRepository extends JpaRepository<ArchivedStudent
     @Query("SELECT s " +
             "FROM ArchivedStudent s " +
             "WHERE s.yearOfGraduation=?1")
-    List<ArchivedStudent> findAllByYearOfGraduation(int yearOfGraduation);
-
-    @Query("SELECT s " +
-            "FROM ArchivedStudent s " +
-            "WHERE s.yearOfGraduation=?1")
     Page<ArchivedStudent> findAllByYearOfGraduation(int yearOfGraduation, Pageable pageable);
 
     @Query("SELECT DISTINCT s.yearOfGraduation " +
             "FROM ArchivedStudent s")
     List<Integer> listAllYears();
 
-    List<ArchivedStudent> findByCountryOfBirthId(Long id);
+    Optional<ArchivedStudent> findBySID(String sid);
 
-    @Query(value = "SELECT max(a.id) FROM archived_student a", nativeQuery = true)
-    Long findLastIndex();
+    @Query("SELECT s.id FROM ArchivedStudent s WHERE s.SID=?1")
+    String findIndexBySID(String sid);
 }

@@ -6,4 +6,5 @@ import pl.dfjp.students.entity.Country;
 
 @Repository
 public interface CountryRepository extends JpaRepository<Country, Long> {
+    Country findByName(String country);
 }

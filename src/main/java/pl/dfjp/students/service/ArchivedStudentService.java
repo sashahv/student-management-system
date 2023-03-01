@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import pl.dfjp.students.entity.address.permanent.PermanentAddress;
 import pl.dfjp.students.entity.student.ArchivedStudent;
 import pl.dfjp.students.entity.student.Student;
+import pl.dfjp.students.entity.study.Study;
 import pl.dfjp.students.exception.StudentNotFoundException;
 import pl.dfjp.students.repository.student.ArchivedStudentRepository;
 import pl.dfjp.students.repository.student.StudentRepository;
@@ -14,7 +16,9 @@ import pl.dfjp.students.repository.study.AverageGradeByAcademicYearRepository;
 import pl.dfjp.students.repository.study.AverageGradeBySemesterRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @Slf4j
@@ -63,27 +67,18 @@ public class ArchivedStudentService {
         );
 
         ArchivedStudent archivedStudent = new ArchivedStudent();
-        archivedStudent.setName(student.getName());
-        archivedStudent.setSurname(student.getSurname());
-        archivedStudent.setFatherName(student.getFatherName());
-        archivedStudent.setGender(student.getGender());
-        archivedStudent.setPassportNumber(student.getPassportNumber());
-        archivedStudent.setPhoneNumber(student.getPhoneNumber());
-        archivedStudent.setBirthDate(student.getBirthDate());
-        archivedStudent.setPlaceOfBirth(student.getPlaceOfBirth());
-        archivedStudent.setCountryOfBirth(student.getCountryOfBirth());
-        archivedStudent.setCitizenship(student.getCitizenship());
-        archivedStudent.setNationality(student.getNationality());
-        archivedStudent.setPermanentAddress(student.getPermanentAddress());
-        archivedStudent.setStudy(student.getStudy());
-        archivedStudent.setAdditionalInformation(student.getAdditionalInformation());
-        archivedStudent.setYearOfGraduation(LocalDate.now().getYear());
-        archivedStudent.setYearOfStarting(student.getScholarship().getDateOfGetting().getYear());
+
+        generateArchivedPermanentAddress(student, archivedStudent);
+
+        generateArchivedStudy(student, archivedStudent);
+
+        generateArchivedGeneralStudentInfo(student, archivedStudent);
+
         archivedStudentRepository.save(archivedStudent);
 
         try {
             attachmentService.saveAttachmentForArchivedStudent(archivedStudent.getId(),
-                    listOfGradesService.generateMultipartFileWithGrades(studentId));
+                    listOfGradesService.generateMultipartFileWithGrades(student.getSID(), student.getStudy().getId()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,5 +87,45 @@ public class ArchivedStudentService {
         averageGradeByAcademicYearRepository.deleteByStudyId(student.getStudy().getId());
 
         studentRepository.deleteById(studentId);
+    }
+
+    private void generateArchivedGeneralStudentInfo(Student student, ArchivedStudent archivedStudent) {
+        archivedStudent.setSID(student.getSID());
+        archivedStudent.setName(student.getName());
+        archivedStudent.setSurname(student.getSurname());
+        archivedStudent.setFatherName(student.getFatherName());
+        archivedStudent.setGender(student.getGender().getName());
+        archivedStudent.setPhoneNumber(student.getPhoneNumber());
+
+        LocalDate localDate = student.getBirthDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", new Locale("pl", "PL"));
+        String formattedDate = localDate.format(formatter);
+
+        archivedStudent.setBirthDate(formattedDate);
+        archivedStudent.setPlaceOfBirth(student.getPlaceOfBirth());
+        archivedStudent.setCountryOfBirth(student.getCountryOfBirth().getName());
+        archivedStudent.setCitizenship(student.getCitizenship());
+        archivedStudent.setNationality(student.getNationality());
+        archivedStudent.setAdditionalInformation(student.getAdditionalInformation());
+        archivedStudent.setYearOfGraduation(LocalDate.now().getYear());
+        archivedStudent.setYearOfStarting(student.getStudy().getToYear());
+    }
+
+    private void generateArchivedStudy(Student student, ArchivedStudent archivedStudent) {
+        Study study = student.getStudy();
+        archivedStudent.setFinishedSemester(study.getActualSemester());
+        archivedStudent.setFinishedYearOfStudy(study.getYearOfStudy());
+        archivedStudent.setFaculty(study.getFaculty().getName());
+        archivedStudent.setFieldOfStudy(study.getFieldOfStudy().getName());
+        archivedStudent.setKindOfStudy(study.getKindOfStudy().getName());
+        archivedStudent.setTypeOfStudy(study.getTypeOfStudy().getName());
+    }
+
+    private void generateArchivedPermanentAddress(Student student, ArchivedStudent archivedStudent) {
+        PermanentAddress permanentAddress = student.getPermanentAddress();
+        archivedStudent.setPermAdrCountry(permanentAddress.getCountry()!=null ? permanentAddress.getCountry().getName() : "");
+        archivedStudent.setPermAdrCity(permanentAddress.getCity());
+        archivedStudent.setPermAdrStreet(permanentAddress.getStreet() + " " + permanentAddress.getHouseNumber());
+        archivedStudent.setPermAdrZipCode(permanentAddress.getZipCode());
     }
 }

@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import pl.dfjp.students.entity.Country;
 import pl.dfjp.students.entity.address.current.CurrentAddress;
@@ -26,6 +25,9 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String SID;
+
     @NotBlank(message = "Imię nie może być pusty")
     private String name;
     @NotBlank(message = "Nazwisko nie może być pusty")
@@ -34,10 +36,7 @@ public class Student {
     @NotNull(message = "Plec nie może być pusta")
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @NotBlank(message = "Numer paszportu nie może być pusty")
     private String passportNumber;
-    @Pattern(regexp = "^(\\+48)? [0-9]{9}$|^(\\+48)? [0-9]{3} [0-9]{3} [0-9]{3}$|^(\\+48)?[0-9]{9}$",
-    message = "Nieprawidłowy format | Przykłady prawidłowego formatu: +48 123 456 789, +48123456789, 123 456 789, 123456789")
     private String phoneNumber;
     @NotNull(message = "Pole jest wymagane")
     @Past(message = "Nie może być w przyszłości")
@@ -51,7 +50,7 @@ public class Student {
     private String nationality;
 
     @Valid
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "permanent_address_id", referencedColumnName = "id")
     private PermanentAddress permanentAddress;
 
@@ -61,7 +60,7 @@ public class Student {
     private CurrentAddress currentAddress;
 
     @Valid
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "study_id", referencedColumnName = "id")
     private Study study;
 

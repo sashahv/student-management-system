@@ -17,7 +17,7 @@ class GeneratorServiceTest {
 
     @Test
     void should_check_if_given_zip_code_is_equals_to_generation_method(){
-        String zipCode = "12234";
+        String zipCode = "12-234";
 
         String generatedZipCod = generatorService.generateZipCode(zipCode);
 
@@ -65,39 +65,39 @@ class GeneratorServiceTest {
         assertThat(matcher.matches()).isFalse();
     }
 
-    @Test
-    void should_return_true_if_generated_phone_number_matches_pattern(){
-        String phoneNumberPattern = "^(\\+48)? [0-9]{9}$|^(\\+48)? [0-9]{3} [0-9]{3} [0-9]{3}$|^(\\+48)?[0-9]{9}$";
-
-        String phoneNumber = "123456789";
-
-        String generatedPhoneNumber = generatorService.generatePhoneNumber(phoneNumber);
-
-        Pattern pattern = Pattern.compile(phoneNumberPattern);
-        Matcher matcher = pattern.matcher(generatedPhoneNumber);
-
-        assertTrue(matcher.matches());
-    }
-
-    @Test
-    void should_return_true_if_phone_number_matches_pattern(){
-        String phoneNumberPattern = "^(\\+48)? [0-9]{9}$|^(\\+48)? [0-9]{3} [0-9]{3} [0-9]{3}$|^(\\+48)?[0-9]{9}$";
-
-        String phoneNumber = "123456789";
-        Pattern pattern = Pattern.compile(phoneNumberPattern);
-        Matcher matcher = pattern.matcher(phoneNumber);
-
-        assertTrue(matcher.matches());
-    }
-
-    @Test
-    void should_return_true_if_phone_number_not_matches_pattern(){
-        String phoneNumberPattern = "^(\\+48)? [0-9]{9}$|^(\\+48)? [0-9]{3} [0-9]{3} [0-9]{3}$|^(\\+48)?[0-9]{9}$";
-
-        String phoneNumber = "+481234567892";
-        Pattern pattern = Pattern.compile(phoneNumberPattern);
-        Matcher matcher = pattern.matcher(phoneNumber);
-
-        assertThat(matcher.matches()).isFalse();
-    }
+//    @Test
+//    void should_return_true_if_generated_phone_number_matches_pattern(){
+//        String phoneNumberPattern = "^(\\+48)? [0-9]{9}$|^(\\+48)? [0-9]{3} [0-9]{3} [0-9]{3}$|^(\\+48)?[0-9]{9}$";
+//
+//        String phoneNumber = "123456789";
+//
+//        String generatedPhoneNumber = generatorService.generatePhoneNumber(phoneNumber);
+//
+//        Pattern pattern = Pattern.compile(phoneNumberPattern);
+//        Matcher matcher = pattern.matcher(generatedPhoneNumber);
+//
+//        assertTrue(matcher.matches());
+//    }
+//
+//    @Test
+//    void should_return_true_if_phone_number_matches_pattern(){
+//        String phoneNumberPattern = "^(\\+48)? [0-9]{9}$|^(\\+48)? [0-9]{3} [0-9]{3} [0-9]{3}$|^(\\+48)?[0-9]{9}$";
+//
+//        String phoneNumber = "123456789";
+//        Pattern pattern = Pattern.compile(phoneNumberPattern);
+//        Matcher matcher = pattern.matcher(phoneNumber);
+//
+//        assertTrue(matcher.matches());
+//    }
+//
+//    @Test
+//    void should_return_true_if_phone_number_not_matches_pattern(){
+//        String phoneNumberPattern = "^(\\+48)? [0-9]{9}$|^(\\+48)? [0-9]{3} [0-9]{3} [0-9]{3}$|^(\\+48)?[0-9]{9}$";
+//
+//        String phoneNumber = "+481234567892";
+//        Pattern pattern = Pattern.compile(phoneNumberPattern);
+//        Matcher matcher = pattern.matcher(phoneNumber);
+//
+//        assertThat(matcher.matches()).isFalse();
+//    }
 }

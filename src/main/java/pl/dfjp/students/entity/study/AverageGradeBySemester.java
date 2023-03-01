@@ -3,6 +3,8 @@ package pl.dfjp.students.entity.study;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @AllArgsConstructor
@@ -30,6 +32,6 @@ public class AverageGradeBySemester {
     @JoinColumn(name = "type_of_study_id", referencedColumnName = "id")
     private TypeOfStudy typeOfStudy; // TYP STUDIÓW
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Study study;
 }

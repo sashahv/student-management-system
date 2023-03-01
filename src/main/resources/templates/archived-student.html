@@ -54,7 +54,7 @@
                 <div class="info-block personal-data">
                     <div class="info-block-title">Dane personalne</div>
                     <div class="info-block-content" th:object="${student}">
-                        <p class="info-block-item" th:if="${student.yearOfStarting!=0}">Rok rozpoczęcia studiów: <span class="info-block-item-value" th:text="${student?.yearOfStarting}"></span></p>
+                        <p class="info-block-item">Rok rozpoczęcia studiów: <span class="info-block-item-value" th:text="${student?.yearOfStarting}"></span></p>
                         <p class="info-block-item">Rok zakończenia: <span class="info-block-item-value" th:text="${student.yearOfGraduation}"></span></p>
                         <p class="info-block-item">Imie: <span class="info-block-item-value" th:text="*{name}"></span>
                         </p>
@@ -62,17 +62,15 @@
                                                                    th:text="*{surname}"></span></p>
                         <p class="info-block-item">Imię ojca: <span class="info-block-item-value"
                                                                     th:text="*{fatherName}"></span></p>
-                        <p class="info-block-item">Numer paszportu: <span class="info-block-item-value"
-                                                                          th:text="*{passportNumber}"></span></p>
                         <p class="info-block-item">Numer telefonu: <span class="info-block-item-value"
                                                                          th:text="*{phoneNumber}"></span></p>
                         <p class="info-block-item">Data urodzenia: <span class="info-block-item-value"
-                                                                         th:text="*{#temporals.format(birthDate, 'dd MMMM yyyy', new java.util.Locale('pl', 'PL'))}"></span>
+                                                                         th:text="*{birthDate}"></span>
                         </p>
-                        <p class="info-block-item">Płeć: <span class="info-block-item-value" th:text="*{gender.name}"></span>
+                        <p class="info-block-item">Płeć: <span class="info-block-item-value" th:text="*{gender}"></span>
                         </p>
                         <p class="info-block-item">Kraj urodzenia: <span class="info-block-item-value"
-                                                                         th:text="*{countryOfBirth?.name}"></span></p>
+                                                                       th:text="*{countryOfBirth}"></span></p>
                         <p class="info-block-item">Miejsce urodzenia: <span class="info-block-item-value"
                                                                             th:text="*{placeOfBirth}"></span></p>
                         <p class="info-block-item">Obywatelstwo: <span class="info-block-item-value"
@@ -89,17 +87,16 @@
                 <div class="info-address">
                     <div class="info-block">
                         <div class="info-block-title">Adres stały</div>
-                        <div class="info-block-content" th:object="${student.permanentAddress}">
-                            <p class="info-block-item">Kraj: <span class="info-block-item-value"
-                                                                   th:text="*{country?.name}"></span></p>
+                        <div class="info-block-content" th:object="${student}">
+                            <p class="info-block-item">Kraj: <span class="info-block-item-value" th:text="*{permAdrCountry}"></span></p>
                             <!--                            <p class="info-block-item">Województwo: <span class="info-block-item-value"-->
                             <!--                                                                          th:text="*{province}"></span></p>-->
                             <p class="info-block-item">Miasto: <span class="info-block-item-value"
-                                                                     th:text="*{city}"></span></p>
+                                                                     th:text="*{permAdrCity}"></span></p>
                             <p class="info-block-item">Ulica: <span class="info-block-item-value"
-                                                                    th:text="*{street} + ' ' + *{houseNumber}"></span></p>
+                                                                    th:text="*{permAdrStreet}"></span></p>
                             <p class="info-block-item">Kod pocztowy: <span class="info-block-item-value"
-                                                                           th:text="*{zipCode}"></span></p>
+                                                                           th:text="*{permAdrZipCode}"></span></p>
                         </div>
                     </div>
             </div>
@@ -107,19 +104,19 @@
                 </div>
                 <div class="info-block">
                     <div class="info-block-title">Przebieg studiów</div>
-                    <div class="info-block-content" th:object="${student.study}">
+                    <div class="info-block-content" th:object="${student}">
                         <p class="info-block-item">Skończony rok studiów: <span class="info-block-item-value"
-                                                                      th:text="*{yearOfStudy}"></span></p>
+                                                                      th:text="*{finishedYearOfStudy}"></span></p>
                         <p class="info-block-item">Skończony semestr studiów: <span class="info-block-item-value"
-                                                                           th:text="*{actualSemester}"></span></p>
+                                                                           th:text="*{finishedSemester}"></span></p>
                         <p class="info-block-item">Wydział: <span class="info-block-item-value"
-                                                                  th:text="*{faculty?.name}"></span></p>
+                                                                  th:text="*{faculty}"></span></p>
                         <p class="info-block-item">Kierunek: <span class="info-block-item-value"
-                                                                   th:text="*{fieldOfStudy?.name}"></span></p>
+                                                                   th:text="*{fieldOfStudy}"></span></p>
                         <p class="info-block-item">Rodzaj studiów: <span class="info-block-item-value"
-                                                                         th:text="*{kindOfStudy?.name}"></span></p>
+                                                                         th:text="*{kindOfStudy}"></span></p>
                         <p class="info-block-item">Typ studiów: <span class="info-block-item-value"
-                                                                      th:text="*{typeOfStudy?.name}"></span></p>
+                                                                      th:text="*{typeOfStudy}"></span></p>
                     </div>
                 </div>
                 <div class="all-grades" th:if="${attachment!=null}">

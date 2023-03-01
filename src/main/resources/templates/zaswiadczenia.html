@@ -62,7 +62,7 @@
 
   L.dz. ..................                                                                         Lublin, ' + ${currentDate} + ' r.
 
-          Niniejszym zaświadczam, że ' + *{name.toUpperCase} + ' ' + *{surname.toUpperCase} + ', ur. ' + *{#temporals.format(birthDate, 'dd.MM.yyyy', new java.util.Locale('pl', 'PL'))} + 'r. w m. ' + *{placeOfBirth}  + ', ' + *{countryOfBirth.name} + ', legitymujący się paszportem ' + *{passportNumber} + ' jest stypendystą Fundacji Jana Pawła II w czasie studiów na Katolickim Uniwersytecie Lubelskim w latach ' + *{currentAddress.startYear} + '-' + *{currentAddress.finishYear} + ' i otrzymuje stypendium w wysokości ' + *{scholarship.actualAmount} + ' zł miesięcznie. W ramach stypendium Fundacja zapewnia utrzymanie i mieszkanie w tym okresie pod adresem: 20-070 Lublin, ul. Boczna Lubomelskiej 2.
+          Niniejszym zaświadczam, że ' + *{name.toUpperCase} + ' ' + *{surname.toUpperCase} + ', ur. ' + *{#temporals.format(birthDate, 'dd.MM.yyyy', new java.util.Locale('pl', 'PL'))} + 'r. w m. ' + *{placeOfBirth}  + ', ' + *{countryOfBirth.name} + ', legitymujący się paszportem ' + *{passportNumber} + ' jest stypendystą Fundacji Jana Pawła II w czasie studiów na Katolickim Uniwersytecie Lubelskim w latach ' + *{study.fromYear!=null ? study.fromYear : ''} + '-' + *{study.toYear!=null ? study.toYear : ''} + ' i otrzymuje stypendium w wysokości ' + *{scholarship.actualAmount} + ' zł miesięcznie. W ramach stypendium Fundacja zapewnia utrzymanie i mieszkanie w tym okresie pod adresem: 20-070 Lublin, ul. Boczna Lubomelskiej 2.
 
          Z poważaniem
 
@@ -93,7 +93,7 @@
 
   L.dz. ..................                                                                         Lublin, ' + ${currentDate} + ' r.
 
-          I, hereby certify that ' + *{gender.name().equals('MALE') ? 'Mr. ' : 'Mrs. '} + *{name.toUpperCase} + ' ' + *{surname.toUpperCase} + ', born ' + *{#temporals.format(birthDate, 'dd.MM.yyyy', new java.util.Locale('pl', 'PL'))} + ' in ' + *{placeOfBirth}  + ' (' + *{countryOfBirth.name} + '), holding a passport nr. ' + *{passportNumber} + ', is a holder of the John Paul II Foundation scholarship for years ' + *{currentAddress.startYear} + '-' + *{currentAddress.finishYear} + '. As a [ACADEMIC YEAR]-year-student of ' + *{study.fieldOfStudy.name} + ' at the John Paul II Catholic University of Lublin she receives monthly ' + *{scholarship.actualAmount} + ' PLN. In the framework of the scholarship, the Foundation provides free sustenance and accommodation in Lublin, ul. Boczna Lubomelskiej 2.
+          I, hereby certify that ' + *{gender.name().equals('MALE') ? 'Mr. ' : 'Mrs. '} + *{name.toUpperCase} + ' ' + *{surname.toUpperCase} + ', born ' + *{#temporals.format(birthDate, 'dd.MM.yyyy', new java.util.Locale('pl', 'PL'))} + ' in ' + *{placeOfBirth}  + ' (' + *{countryOfBirth.name} + '), holding a passport nr. ' + *{passportNumber} + ', is a holder of the John Paul II Foundation scholarship for years ' + *{study.fromYear!=null ? study.fromYear : ''} + '-' + *{study.toYear!=null ? study.toYear : ''} + '. As a [ACADEMIC YEAR]-year-student of ' + *{study.fieldOfStudy.name} + ' at the John Paul II Catholic University of Lublin she receives monthly ' + *{scholarship.actualAmount} + ' PLN. In the framework of the scholarship, the Foundation provides free sustenance and accommodation in Lublin, ul. Boczna Lubomelskiej 2.
 
 
 ..........................................

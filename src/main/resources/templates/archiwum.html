@@ -44,7 +44,7 @@
 <div class="wrapper">
     <div class="top-panel">
         <div class="student-search-field">
-            <img th:src="@{/images/search.svg}" alt="search" class="search-icon">
+            <img th:src="@{/images/search.svg}" onclick="searchResults()" alt="search" class="search-icon" id="search-button">
             <input id="student-search" type="text" name="keyword" placeholder="Wyszukaj" autocomplete="off"/>
             <div id="message-container"></div>
         </div>
@@ -59,7 +59,7 @@
         </div>
         <div id="students-count">
             <div class="students-count two-rows">Łączna liczba stypendystów</div>
-            <div id="students-count-second" class="students-count two-rows" th:text="'w archiwum' + (${yearOfGraduation}!=null ? ' ' + ${yearOfGraduation} + ' roku: ' : ': ') + ${totalItems}"></div>
+            <div id="students-count-second" class="students-count two-rows" th:text="'w archiwum' + (${yearOfGraduation}!=null ? ' ' + ${yearOfGraduation} + ' roku: ' : ': ') + ${yearOfGraduation!=null ? totalAmountOfStudentsByYear : totalItems}"></div>
         </div>
              </div>
     <div class="table-wrap">
@@ -109,12 +109,12 @@
             <tr th:each="student : ${studentsByYearOfGraduation}" th:onclick="'window.location.href=\'/archiwum/stypendysta?id=' + ${student.id} + '\''">
                 <td th:text="${student.name}"></td>
                 <td th:text="${student.surname}"></td>
-                <td th:text="${#temporals.format(student.birthDate, 'dd MMMM yyyy', new java.util.Locale('pl', 'PL'))}"></td>
-                <td th:text="${student.yearOfGraduation}"></td>
+                <td th:text="${student.birthDate}"></td>
+                <td th:text="${student.yearOfGraduation!=0 ? student.yearOfGraduation : ''}"></td>
             </tr>
             </tbody>
         </table>
-        <div class="pagination-controls" th:if="${totalPages > 1 && yearOfGraduation==null}">
+        <div class="pagination-controls" id="pagination-controls" th:if="${totalPages > 1 && yearOfGraduation==null}">
             <div class="pagination-item">
                 <a class="prev" th:if="${currentPage > 1}"
                    th:href="@{'/archiwum?str=' + ${currentPage-1} + '&poleSort=' + ${sortField} + '&kierSort=' + ${sortDirection}}"><</a>
@@ -144,11 +144,17 @@
 
     let studentSearch = $('#student-search');
 
-    let studentsCount = $('#students-count')
+    let studentsCount = $('#students-count');
     let choosingYearBox = $('#choosing-year-box');
 
-    $('#student-search').on('keyup', function () {
-        let value = $(this).val();
+    $('#student-search').on('keypress', function(e) {
+        if (e.which == 13) {
+            searchResults();
+        }
+    });
+
+    function searchResults() {
+        let value = $('#student-search').val();
 
         if(yearOfGraduation!=null){
             setTimeout(function(){
@@ -159,6 +165,7 @@
         }
 
         if (!value) {
+            document.getElementById('pagination-controls').style.visibility='visible';
             // clear the filters and return the standard table
 
             if(yearOfGraduation!=null){
@@ -185,7 +192,7 @@
                 // rebuild the table with the filtered data
                 rebuildTable(filteredData);
             }
-        });
+        };
 
     function filterFunction(value, data) {
         let filteredData = [];
@@ -241,19 +248,17 @@
             '        </tr>\n' +
             '        </thead><tbody>'
         for (let i = 0; i < data.length; i++) {
-            let birthDate = new Date(data[i].birthDate);
-            let options = {year: 'numeric', month: 'long', day: 'numeric'};
-            let formattedDate = birthDate.toLocaleDateString('pl-PL', options);
             let row =
-                '<tr onclick="window.location.href = \'/stypendysci/stypendysta?id=' + data[i].id + '\'">' +
+                '<tr onclick="window.location.href = \'/archiwum/stypendysta?id=' + data[i].id + '\'">' +
                 '<td>' + data[i].name + '</td>\n' +
                 '<td>' + data[i].surname + '</td>\n' +
-                '<td>' + formattedDate + '</td>\n' +
-                '<td>' + data[i].yearOfGraduation + '</td>' +
+                '<td>' + data[i].birthDate + '</td>\n' +
+                '<td>' + (data[i].yearOfGraduation!==0 ? data[i].yearOfGraduation : '') + '</td>' +
                 '</tr>';
             table.innerHTML += row;
         }
         table.innerHTML += '</tbody>';
+        document.getElementById('pagination-controls').style.visibility='hidden';
     }
 
         document.getElementById("year-of-graduation-select")

@@ -123,11 +123,11 @@ public class ListOfGradesService {
         outputStream.flush();
     }
 
-    public MultipartFile generateMultipartFileWithGrades(Long studentId) throws DocumentException, IOException {
-        ArchivedStudent archivedStudent = archivedStudentRepository.findById(studentId).orElseThrow(
-                () -> new StudentNotFoundException("Student with id " + studentId + " doesn't exist")
+    public MultipartFile generateMultipartFileWithGrades(String SID,
+                                                         Long studyId) throws DocumentException, IOException {
+        ArchivedStudent archivedStudent = archivedStudentRepository.findBySID(SID).orElseThrow(
+                () -> new StudentNotFoundException("Student doesn't exist")
         );
-        Long studyId = archivedStudent.getStudy().getId();
         // Get the average grades for the student with the given ID
         List<AverageGradeBySemester> avgGrades = averageGradeBySemesterRepository.findByStudyId(studyId);
         // Create an iText Document and PdfWriter
@@ -200,7 +200,9 @@ public class ListOfGradesService {
         paragraph = new Paragraph(new Phrase("Roczne oceny", fontTitle));
         paragraph.setSpacingBefore(20);
         paragraph.setSpacingAfter(20);
-        document.add(paragraph);
+        if(!avgGradesByYear.isEmpty()){
+            document.add(paragraph);
+        }
 
         PdfPTable yearGradesTable = new PdfPTable(6);
         yearGradesTable.setWidthPercentage(100);

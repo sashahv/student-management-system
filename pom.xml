@@ -9,10 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>pl.dfjp</groupId>
-	<artifactId>students</artifactId>
+	<artifactId>baza_dfjp2</artifactId>
 	<version>v.1.0.0</version>
 	<name>students</name>
 	<description>Database of students</description>
+	<packaging>jar</packaging>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

@@ -23,10 +23,6 @@ public class Scholarship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull(message = "Pole jest wymagane")
-    private LocalDate dateOfGetting;
-    @NotNull(message = "Pole jest wymagane")
-    private LocalDate dateOfTermination; // Data ustania;
     @Min(value = 0, message = "Wysokość stypendium nię może być mniejszą od 0")
     private int actualAmount;
     @Min(value = 0, message = "Wysokość stypendium nię może być mniejszą od 0")

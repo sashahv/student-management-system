@@ -1,5 +1,6 @@
 package pl.dfjp.students.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +9,7 @@ import pl.dfjp.students.service.ViewService;
 
 @Controller
 @RequestMapping("/archiwum")
+@Slf4j
 public class ArchiveController {
     private final ViewService viewService;
 

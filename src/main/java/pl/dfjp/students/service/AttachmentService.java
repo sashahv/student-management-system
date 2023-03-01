@@ -1,6 +1,5 @@
 package pl.dfjp.students.service;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dfjp.students.entity.student.ArchivedStudent;
@@ -12,7 +11,6 @@ import pl.dfjp.students.repository.student.AttachmentRepository;
 import pl.dfjp.students.repository.student.StudentRepository;
 import pl.dfjp.students.utils.FileUtils;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,12 +28,6 @@ public class AttachmentService {
         this.studentRepository = studentRepository;
         this.archivedStudentRepository = archivedStudentRepository;
     }
-//
-//    @Scheduled(cron = "0 0 0 * * ?")
-//    public void deleteExpiredAttachments() {
-//        LocalDate expirationDate = LocalDate.now().minusYears(2);
-//        attachmentRepository.deleteByExpirationDateBefore(expirationDate);
-//    }
 
     public void saveAttachment(Long studentId,
                                int semester,

@@ -139,10 +139,10 @@
                             <p class="info-block-item">Miejsce zamieszkania: <span class="info-block-item-value" th:if="*{placeOfLiving!=null}"
                                                                                    th:text="*{placeOfLiving?.name} + (*{placeOfLiving?.roomSize} != 0 ? (' / ' + *{placeOfLiving?.roomSize} + ' os') : '')"></span>
                             </p>
-                            <p class="info-block-item">Rok rozpoczęczia: <span class="info-block-item-value"
-                                                                               th:text="*{startYear}"></span></p>
+                            <p class="info-block-item">Rok rozpoczęcia: <span class="info-block-item-value"
+                                                                               th:text="${student.study.fromYear}"></span></p>
                             <p class="info-block-item">Rok zakończenia: <span class="info-block-item-value"
-                                                                              th:text="*{finishYear}"></span></p>
+                                                                              th:text="${student.study.toYear}"></span></p>
                         </div>
                     </div>
 
@@ -152,12 +152,6 @@
                     <div class="info-block">
                         <div class="info-block-title">Stypendium</div>
                         <div class="info-block-content" th:object="${student.scholarship}">
-                            <p class="info-block-item">Data wydania: <span class="info-block-item-value"
-                                                                           th:text="*{#temporals.format(dateOfGetting, 'dd MMMM yyyy', new java.util.Locale('pl', 'PL'))}"></span>
-                            </p>
-                            <p class="info-block-item">Data ustania: <span class="info-block-item-value"
-                                                                           th:text="*{#temporals.format(dateOfTermination, 'dd MMMM yyyy', new java.util.Locale('pl', 'PL'))}"></span>
-                            </p>
                             <p class="info-block-item">Wysokość: <span class="info-block-item-value"
                                                                        th:text="*{actualAmount} + ' zł'"></span></p>
                             <p class="info-block-item">Odliczenia: <span class="info-block-item-value"
@@ -258,7 +252,11 @@
 
     function validateForm() {
         let gradeField = document.getElementById("change-semester-input-avg-grade-field");
-            if (!gradeField.value || gradeField.value.trim() === "" || isNaN(gradeField.value) || gradeField.value < 1 || gradeField.value > 5) {
+            if (!gradeField.value
+                || gradeField.value.trim() === ""
+                || isNaN(gradeField.value)
+                || gradeField.value < 1
+                || gradeField.value > 5) {
                 gradeField.style.border = "4px solid red";
                 return false
         }

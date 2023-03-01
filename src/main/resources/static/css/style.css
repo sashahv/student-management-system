@@ -521,6 +521,10 @@ body {
     margin-bottom: 30px;
 }
 
+#search-button:hover{
+    cursor: pointer;
+}
+
 #student-search {
     display: flex;
     padding-left: 30px;
@@ -1641,15 +1645,25 @@ tr .info-block-item-value {
     color: #FFFFFF;
 }
 
-.document-language.pl {
+.document-block.polish {
     position: relative;
-    z-index: 200;
+    z-index: 1;
+}
+
+.document-text.polish {
+    position: relative;
+    z-index: 1;
 }
 
 .document-language.eng {
     margin-top: 150px;
     position: relative;
     z-index: -1;
+}
+
+.document-text.english{
+    position: relative;
+    z-index: 0;
 }
 
 .document-text {
@@ -2270,4 +2284,8 @@ table.files-table {
 .all-grades a:hover{
     color: #FFFFFF;
     text-decoration: none;
+}
+
+.pagination-controls {
+    margin-bottom: 30px;
 }

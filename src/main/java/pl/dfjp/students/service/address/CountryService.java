@@ -49,7 +49,6 @@ public class CountryService {
         List<Student> students = studentRepository.findByCountryOfBirthId(id);
         List<PermanentAddress> permanentAddresses = permanentAddressRepository.findByCountryId(id);
         List<CurrentAddress> currentAddresses = currentAddressRepository.findByCountryId(id);
-        List<ArchivedStudent> archivedStudents = archivedStudentRepository.findByCountryOfBirthId(id);
         if(country!=null){
             currentAddresses.forEach(currentAddress -> {
                 currentAddress.setCountry(null);
@@ -58,10 +57,6 @@ public class CountryService {
             permanentAddresses.forEach(permanentAddress -> {
                 permanentAddress.setCountry(null);
                 permanentAddressRepository.save(permanentAddress);
-            });
-            archivedStudents.forEach(archivedStudent -> {
-                archivedStudent.setCountryOfBirth(null);
-                archivedStudentRepository.save(archivedStudent);
             });
             students.forEach(student -> {
                 student.setCountryOfBirth(null);

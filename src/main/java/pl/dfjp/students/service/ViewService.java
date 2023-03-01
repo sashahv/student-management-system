@@ -1,5 +1,6 @@
 package pl.dfjp.students.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +30,10 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ViewService {
     private final StudyService studyService;
     private final CountryRepository countryRepository;
@@ -70,6 +73,13 @@ public class ViewService {
 
     public void showAddStudentPage(Model model) {
         Student student = new Student();
+        List<Scholarship> allScholarships = scholarshipRepository.findAll();
+        if(!allScholarships.isEmpty()) {
+            model.addAttribute("actualScholarship", allScholarships.get(0).getActualAmount());
+        } else {
+            model.addAttribute("actualScholarship", 0);
+        }
+
         model.addAttribute("student", student);
         model.addAttribute("genders", List.of(Gender.values()));
         model.addAttribute("placesOfLiving", placeOfLivingRepository.findAll());
@@ -234,7 +244,7 @@ public class ViewService {
                                 String sortDirection,
                                 String yearOfGraduation) {
 
-        int pageSize = 200;
+        int pageSize = 100;
         if (pageNumber == null) {
             pageNumber = "1";
         }
@@ -243,18 +253,24 @@ public class ViewService {
             sortDirection = "desc";
         }
         if (sortField == null) {
-            sortField = "yearOfGraduation";
+            sortField = "id";
         }
         List<ArchivedStudent> archivedStudentsFiltered = archivedStudentService.listAll(keyword);
         Page<ArchivedStudent> page = showPaginatedArchivePage(formattedPageNumber, pageSize, sortField, sortDirection);
         Page<ArchivedStudent> archivedStudentsPage = archivedStudentService.listAllByYearOfGraduation(yearOfGraduation, page);
         List<ArchivedStudent> studentsByYearOfGraduation = archivedStudentsPage.getContent();
-        List<Integer> availableYears = archivedStudentRepository.listAllYears();
+        int totalAmountOfStudentsByYear = archivedStudentsPage.getContent().size();
+        List<Integer> sortedAvailableYears = archivedStudentRepository
+                .listAllYears().stream()
+                .sorted(Comparator.reverseOrder())
+                .filter(integer -> integer>0)
+                .collect(Collectors.toList());
         model.addAttribute("currentPage", formattedPageNumber);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("totalAmountOfStudentsByYear", totalAmountOfStudentsByYear);
         model.addAttribute("yearOfGraduation", yearOfGraduation);
-        model.addAttribute("availableYears", availableYears);
+        model.addAttribute("availableYears", sortedAvailableYears);
         model.addAttribute("studentsFiltered", archivedStudentsFiltered);
         model.addAttribute("studentsByYearOfGraduation", studentsByYearOfGraduation);
         model.addAttribute("countArchiveStudents", (long) studentsByYearOfGraduation.size());

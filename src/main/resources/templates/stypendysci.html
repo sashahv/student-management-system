@@ -45,7 +45,7 @@
 <div class="wrapper">
         <div class="top-panel">
             <div class="student-search-field">
-                <img th:src="@{/images/search.svg}" alt="search" class="search-icon">
+                <img th:src="@{/images/search.svg}" onclick="searchResults()"  alt="search" class="search-icon">
                 <input id="student-search" type="text" name="keyword" placeholder="Wyszukaj" autocomplete="off"/>
                 <div id="message-container"></div>
             </div>
@@ -121,8 +121,14 @@
     let students = /*[[${studentsFiltered}]]*/
     /*<![CDATA[*/
 
-    $('#student-search').on('keyup', function () {
-        let value = $(this).val();
+    $('#student-search').on('keypress', function(e) {
+            if (e.which == 13) {
+            searchResults();
+            }
+    });
+
+    function searchResults() {
+        let value = $('#student-search').val();
 
         if (!value) {
             // clear the filters and return the standard table
@@ -142,7 +148,7 @@
             // rebuild the table with the filtered data
             rebuildTable(filteredData);
         }
-    });
+    };
 
     function filterFunction(value, data) {
         let filteredData = [];

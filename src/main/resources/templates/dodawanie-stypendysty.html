@@ -59,10 +59,8 @@
 
                     <input autocomplete="off" type="text" th:field="*{fatherName}" class="data-block-item" placeholder="Imię ojca">
 
-                    <div>
-                        <p th:if="${#fields.hasErrors('passportNumber')}" class="invalid-field-message">Pole jest wymagane</p>
-                        <input autocomplete="off" type="text" th:field="*{passportNumber}" class="data-block-item" placeholder="Numer paszportu">
-                    </div>
+                    <input autocomplete="off" type="text" th:field="*{passportNumber}" class="data-block-item" placeholder="Numer paszportu">
+
 
                     <div>
                         <p th:if="${#fields.hasErrors('phoneNumber')}" class="invalid-field-message">Nieprawidłowy format</p>
@@ -72,7 +70,7 @@
                 <div class="personal-data-row">
                     <div>
                         <p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" class="invalid-field-message"></p>
-                        <input autocomplete="off"  type="text" onfocusin="(this.type='date')" onfocusout="(this.type='text')" th:field="*{birthDate}" class="data-block-item data-dropdown" placeholder="Data urodzenia"/>
+                        <input autocomplete="off" type="text" onfocusin="(this.type='date')" onfocusout="(this.type='text')" th:field="*{birthDate}" class="data-block-item data-dropdown" placeholder="Data urodzenia"/>
                     </div>
                     <div>
                         <p th:if="${#fields.hasErrors('gender')}" class="invalid-field-message">Pole jest wymagane</p>
@@ -117,11 +115,8 @@
                             <input autocomplete="off" type="text" th:field="*{street}" class="data-block-item" placeholder="Ulica">
                             <input autocomplete="off" type="text" th:field="*{houseNumber}" class="data-block-item"
                                    placeholder="Nr domu">
-                            <div>
-                                <p th:if="${#fields.hasErrors('zipCode')}" class="invalid-field-message">Nieprawidłowy format</p>
                                 <input autocomplete="off" id="zip" type="text" th:field="*{zipCode}" class="data-block-item"
                                        placeholder="Kod pocztowy">
-                            </div>
                     </div>
                 </div>
                 <div class="data-block" id="study" th:object="${student.study}">
@@ -176,15 +171,9 @@
                                 <p th:if="${#fields.hasErrors('actualSemester')}" th:errors="*{actualSemester}" class="invalid-field-message">Pole jest wymagane</p>
                                 <input autocomplete="off" type="text" th:field="*{actualSemester}" class="data-block-item" placeholder="Semester studiów">
                             </div>
-                            <div th:object="${student.scholarship}">
-                                <p th:if="${#fields.hasErrors('dateOfGetting')}" th:errors="*{dateOfGetting}" class="invalid-field-message"></p>
-                                <input autocomplete="off" type="text" onfocusin="(this.type='date')" lang="pl" onfocusout="(this.type='text')" th:field="${student.scholarship.dateOfGetting}" class="data-block-item data-dropdown" placeholder="Data rozpoczęcia" />
-                            </div>
-                            <div th:object="${student.scholarship}">
-                                <p  th:if="${#fields.hasErrors('dateOfTermination')}" th:errors="*{dateOfTermination}" class="invalid-field-message"></p>
-                                <input autocomplete="off" type="text" onfocusin="(this.type='date')" lang="pl" onfocusout="(this.type='text')" th:field="${student.scholarship.dateOfTermination}" class="data-block-item data-dropdown" placeholder="Data zakończenia"/>
-                            </div>
-                            <input autocomplete="off" type="hidden" th:field="${student.scholarship.actualAmount}" th:value="${student.scholarship.actualAmount}">
+                                <input autocomplete="off" type="text" th:field="${student.study.fromYear}" class="data-block-item data-dropdown" placeholder="Rok rozpoczęcia" />
+                                <input autocomplete="off" type="text" th:field="${student.study.toYear}" class="data-block-item data-dropdown" placeholder="Rok zakończenia"/>
+                        <input autocomplete="off" type="hidden" th:field="${student.scholarship.actualAmount}" th:value="${actualScholarship}">
                     </div>
                 </div>
                 <div class="data-block" id="current-address" th:object="${student.currentAddress}">
@@ -201,11 +190,8 @@
                             <input autocomplete="off" type="text" th:field="*{street}" class="data-block-item long" placeholder="Ulica">
                             <input autocomplete="off" type="text" th:field="*{houseNumber}" class="data-block-item"
                                    placeholder="Nr domu">
-                            <div>
-                                <p th:if="${#fields.hasErrors('zipCode')}" class="invalid-field-message">Nieprawidłowy format</p>
-                                <input autocomplete="off" type="text" th:field="*{zipCode}" id="zipCode" class="data-block-item"
+                                <input autocomplete="off" type="text" th:field="*{zipCode}" value="20-070" id="zipCode" class="data-block-item"
                                        placeholder="Kod pocztowy">
-                            </div>
                         <div>
                             <p th:if="${#fields.hasErrors('placeOfLiving')}" class="invalid-field-message">Pole jest wymagane</p>
                             <select th:field="*{placeOfLiving}" class="data-block-item data-dropdown last-column" style="font-size: 13px">

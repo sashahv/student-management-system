@@ -23,8 +23,6 @@ public class PermanentAddress {
     private String street;
     private String houseNumber;
     private String city;
-    @Pattern(regexp = "^$|^[0-9]{2}[- ][0-9]{3}|[0-9]{5}$",
-            message = "Nieprawidłowy format | Przykłady prawidłowego formatu: 12-345, 12345, 12 345")
     private String zipCode;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -32,11 +30,8 @@ public class PermanentAddress {
     private Country country;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "permanentAddress")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "permanentAddress")
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Student student;
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "permanentAddress")
-    private ArchivedStudent archivedStudent;
 }

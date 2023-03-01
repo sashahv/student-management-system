@@ -129,7 +129,7 @@ public class StudentController {
             return "dodawanie-stypendysty";
         }
 
-        redirectAttributes.addFlashAttribute("message", "Student pomyślnie dodany");
+        redirectAttributes.addFlashAttribute("message", "Stypendysta pomyślnie dodany");
         studentService.addStudent(student);
         return "redirect:/dodawanie-stypendysty";
     }
@@ -195,7 +195,7 @@ public class StudentController {
         if (student.getStudy().getActualSemester() == 10) {
             averageGradeService.generateAverageGradeForActualSemester(studentId, grade);
             redirectAttributes.addFlashAttribute("message", "Semestr pomyślnie zwiększony\nStudent dodany do archiwum");
-            return "redirect:/archiwum/stypendysta?id=" + archivedStudentRepository.findLastIndex();
+            return "redirect:/archiwum/stypendysta?id=" + archivedStudentRepository.findIndexBySID(student.getSID());
         } else {
             averageGradeService.generateAverageGradeForActualSemester(studentId, grade);
             redirectAttributes.addFlashAttribute("message", "Semestr pomyślnie zwiększony");
