@@ -19,6 +19,7 @@ The system is designed for use by a single administrator, who must be authorized
 - REST API
 - Spring Boot 3.0.1
 - Spring Security
+- Spring Data
 - Maven
 - Hibernate
 - JUnit
