@@ -16,6 +16,7 @@ The system is designed for use by a single administrator, who must be authorized
 
 ## Technologies Used
 - Java 17
+- REST API
 - Spring Boot 3.0.1
 - Spring Security
 - Maven
