@@ -26,6 +26,7 @@ The system is designed for use by a single administrator, who must be authorized
 - Uploading PDF files with grades for students after the end of the semester when administrator inputs average grade
 - Automatically generated PDF file with final grades for student after adding him to archive that depends on grades during studies.
 
+## Installation
 Once you have the necessary software installed, follow these steps to run the project:
 1. Clone the repository to your local machine
 2. Navigate to the project directory and run the following command: `./mvnw spring-boot:run`
